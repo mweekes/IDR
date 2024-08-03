@@ -13,7 +13,6 @@ object FMain_11011981: TFMain_11011981
   Font.Style = []
   KeyPreview = True
   Menu = MainMenu
-  OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
@@ -22,7 +21,6 @@ object FMain_11011981: TFMain_11011981
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object SplitterH1: TSplitter
     Left = 0
@@ -58,6 +56,8 @@ object FMain_11011981: TFMain_11011981
     Align = alClient
     TabOrder = 1
     OnChange = pcWorkAreaChange
+    ExplicitWidth = 756
+    ExplicitHeight = 580
     object tsCodeView: TTabSheet
       Caption = 'CodeViewer (F6)'
       object lbCode: TListBox
@@ -87,6 +87,8 @@ object FMain_11011981: TFMain_11011981
         OnDrawItem = lbCodeDrawItem
         OnKeyDown = lbCodeKeyDown
         OnMouseMove = lbCodeMouseMove
+        ExplicitWidth = 638
+        ExplicitHeight = 527
       end
       object CodePanel: TPanel
         Left = 0
@@ -96,6 +98,7 @@ object FMain_11011981: TFMain_11011981
         Align = alTop
         PopupMenu = pmCodePanel
         TabOrder = 1
+        ExplicitWidth = 748
         object lProcName: TLabel
           Left = 128
           Top = 6
@@ -145,6 +148,7 @@ object FMain_11011981: TFMain_11011981
           Caption = 'XRefs'
           TabOrder = 2
           OnClick = ShowCXrefsClick
+          ExplicitLeft = 636
         end
         object bCodeNext: TButton
           Left = 47
@@ -203,20 +207,18 @@ object FMain_11011981: TFMain_11011981
         OnDrawItem = lbXrefsDrawItem
         OnKeyDown = lbXrefsKeyDown
         OnMouseMove = lbXrefsMouseMove
+        ExplicitLeft = 638
+        ExplicitHeight = 527
       end
     end
     object tsClassView: TTabSheet
       Caption = 'ClassViewer (F7)'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object tvClassesFull: TTreeView
         Left = 0
         Top = 40
         Width = 756
-        Height = 557
+        Height = 537
         Align = alClient
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
@@ -285,10 +287,6 @@ object FMain_11011981: TFMain_11011981
     object tsStrings: TTabSheet
       Caption = 'Strings (F8)'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lbStrings: TListBox
         Left = 0
         Top = 25
@@ -356,10 +354,6 @@ object FMain_11011981: TFMain_11011981
       Caption = 'Items'
       ImageIndex = 3
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sgItems: TStringGrid
         Left = 0
         Top = 0
@@ -385,10 +379,6 @@ object FMain_11011981: TFMain_11011981
     object tsNames: TTabSheet
       Caption = 'Names (F9)'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lbNames: TListBox
         Left = 0
         Top = 25
@@ -456,10 +446,6 @@ object FMain_11011981: TFMain_11011981
       Font.Style = []
       ImageIndex = 5
       ParentFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lbSourceCode: TListBox
         Left = 0
         Top = 0
@@ -491,12 +477,9 @@ object FMain_11011981: TFMain_11011981
     Align = alLeft
     TabOrder = 0
     OnChange = pcInfoChange
+    ExplicitHeight = 580
     object tsUnits: TTabSheet
       Caption = 'Units (F2)'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lbUnits: TListBox
         Left = 0
         Top = 0
@@ -548,15 +531,12 @@ object FMain_11011981: TFMain_11011981
         OnDblClick = lbRTTIsDblClick
         OnKeyDown = lbRTTIsKeyDown
         OnMouseMove = lbRTTIsMouseMove
+        ExplicitHeight = 552
       end
     end
     object tsForms: TTabSheet
       Caption = 'Forms (F5)'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 423
@@ -725,6 +705,8 @@ object FMain_11011981: TFMain_11011981
     OnDrawItem = lbUnitItemsDrawItem
     OnKeyDown = lbUnitItemsKeyDown
     OnMouseMove = lbUnitItemsMouseMove
+    ExplicitTop = 584
+    ExplicitWidth = 1009
   end
   object MainMenu: TMainMenu
     AutoHotkeys = maManual
