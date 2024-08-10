@@ -26,7 +26,7 @@ __published: // IDE-managed Components
 	TLabel *lblFin;
 	TLabel *lblUnk;
 	TButton *btnOK;
-
+	
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FormCreate(TObject *Sender);
 

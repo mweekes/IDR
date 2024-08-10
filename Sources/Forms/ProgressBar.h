@@ -25,7 +25,8 @@ public: // User declarations
 	void __fastcall StartProgress(String text0, String text1, int steps);
 	void __fastcall wm_updAnalysisStatus(TMessage& msg);
 
-	BEGIN_MESSAGE_MAP VCL_MESSAGE_HANDLER(WM_UPDANALYSISSTATUS, TMessage, wm_updAnalysisStatus);
+	BEGIN_MESSAGE_MAP 
+	VCL_MESSAGE_HANDLER(WM_UPDANALYSISSTATUS, TMessage, wm_updAnalysisStatus);
 	END_MESSAGE_MAP(TForm)
 };
 

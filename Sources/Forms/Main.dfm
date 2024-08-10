@@ -1,8 +1,8 @@
 object FMain_11011981: TFMain_11011981
-  Left = 907
-  Top = 55
+  Left = 243
+  Top = 124
   Caption = 'Interactive Delphi Reconstructor'
-  ClientHeight = 755
+  ClientHeight = 782
   ClientWidth = 1017
   Color = clBtnFace
   DefaultMonitor = dmDesktop
@@ -13,7 +13,7 @@ object FMain_11011981: TFMain_11011981
   Font.Style = []
   KeyPreview = True
   Menu = MainMenu
-  Position = poScreenCenter
+  Position = poDefault
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -24,7 +24,7 @@ object FMain_11011981: TFMain_11011981
   TextHeight = 13
   object SplitterH1: TSplitter
     Left = 0
-    Top = 605
+    Top = 632
     Width = 1017
     Height = 4
     Cursor = crVSplit
@@ -34,37 +34,37 @@ object FMain_11011981: TFMain_11011981
     Color = clGray
     MinSize = 100
     ParentColor = False
-    ExplicitTop = 705
+    ExplicitTop = 647
   end
   object SplitterV1: TSplitter
     Left = 250
     Top = 0
-    Height = 605
+    Height = 632
     AutoSnap = False
     Beveled = True
     Color = clGray
     MinSize = 3
     ParentColor = False
-    ExplicitHeight = 705
+    ExplicitHeight = 647
   end
   object pcWorkArea: TPageControl
     Left = 253
     Top = 0
     Width = 764
-    Height = 605
-    ActivePage = tsCodeView
+    Height = 632
+    ActivePage = tsClassView
     Align = alClient
     TabOrder = 1
     OnChange = pcWorkAreaChange
     ExplicitWidth = 756
-    ExplicitHeight = 580
+    ExplicitHeight = 607
     object tsCodeView: TTabSheet
       Caption = 'CodeViewer (F6)'
       object lbCode: TListBox
         Left = 0
         Top = 25
         Width = 646
-        Height = 552
+        Height = 594
         Cursor = crIBeam
         Style = lbOwnerDrawFixed
         AutoComplete = False
@@ -87,8 +87,6 @@ object FMain_11011981: TFMain_11011981
         OnDrawItem = lbCodeDrawItem
         OnKeyDown = lbCodeKeyDown
         OnMouseMove = lbCodeMouseMove
-        ExplicitWidth = 638
-        ExplicitHeight = 527
       end
       object CodePanel: TPanel
         Left = 0
@@ -98,7 +96,6 @@ object FMain_11011981: TFMain_11011981
         Align = alTop
         PopupMenu = pmCodePanel
         TabOrder = 1
-        ExplicitWidth = 748
         object lProcName: TLabel
           Left = 128
           Top = 6
@@ -148,7 +145,6 @@ object FMain_11011981: TFMain_11011981
           Caption = 'XRefs'
           TabOrder = 2
           OnClick = ShowCXrefsClick
-          ExplicitLeft = 636
         end
         object bCodeNext: TButton
           Left = 47
@@ -191,7 +187,7 @@ object FMain_11011981: TFMain_11011981
         Left = 646
         Top = 25
         Width = 110
-        Height = 552
+        Height = 579
         Style = lbOwnerDrawFixed
         Align = alRight
         Anchors = []
@@ -207,8 +203,6 @@ object FMain_11011981: TFMain_11011981
         OnDrawItem = lbXrefsDrawItem
         OnKeyDown = lbXrefsKeyDown
         OnMouseMove = lbXrefsMouseMove
-        ExplicitLeft = 638
-        ExplicitHeight = 527
       end
     end
     object tsClassView: TTabSheet
@@ -218,7 +212,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 40
         Width = 756
-        Height = 537
+        Height = 564
         Align = alClient
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
@@ -236,6 +230,8 @@ object FMain_11011981: TFMain_11011981
         OnClick = tvClassesFullClick
         OnDblClick = tvClassesDblClick
         OnMouseMove = tvClassesFullMouseMove
+        ExplicitWidth = 748
+        ExplicitHeight = 539
       end
       object Panel1: TPanel
         Left = 0
@@ -244,6 +240,7 @@ object FMain_11011981: TFMain_11011981
         Height = 40
         Align = alTop
         TabOrder = 1
+        ExplicitWidth = 748
         object rgViewerMode: TRadioGroup
           Left = 1
           Top = 1
@@ -263,7 +260,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 40
         Width = 756
-        Height = 537
+        Height = 564
         Align = alClient
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
@@ -282,6 +279,8 @@ object FMain_11011981: TFMain_11011981
         OnDblClick = tvClassesDblClick
         OnKeyDown = tvClassesShortKeyDown
         OnMouseMove = tvClassesShortMouseMove
+        ExplicitWidth = 748
+        ExplicitHeight = 539
       end
     end
     object tsStrings: TTabSheet
@@ -291,23 +290,22 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 25
         Width = 646
-        Height = 572
-        Style = lbOwnerDrawFixed
+        Height = 594
         AutoComplete = False
         Align = alClient
         Anchors = []
         Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
+        Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
         Font.Name = 'Courier New'
         Font.Style = []
+        MultiSelect = True
         ParentFont = False
         PopupMenu = pmStrings
         TabOrder = 0
         OnClick = lbStringsClick
         OnDblClick = lbStringsDblClick
-        OnDrawItem = lbStringsDrawItem
         OnMouseMove = lbStringsMouseMove
       end
       object Panel3: TPanel
@@ -333,7 +331,7 @@ object FMain_11011981: TFMain_11011981
         Left = 646
         Top = 25
         Width = 110
-        Height = 552
+        Height = 579
         Style = lbOwnerDrawFixed
         Align = alRight
         Anchors = []
@@ -357,8 +355,8 @@ object FMain_11011981: TFMain_11011981
       object sgItems: TStringGrid
         Left = 0
         Top = 0
-        Width = 756
-        Height = 597
+        Width = 657
+        Height = 363
         Align = alClient
         DefaultRowHeight = 16
         FixedCols = 0
@@ -371,9 +369,6 @@ object FMain_11011981: TFMain_11011981
           64
           538
           21)
-        RowHeights = (
-          16
-          16)
       end
     end
     object tsNames: TTabSheet
@@ -383,7 +378,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 25
         Width = 646
-        Height = 572
+        Height = 594
         AutoComplete = False
         Align = alClient
         Anchors = []
@@ -394,6 +389,7 @@ object FMain_11011981: TFMain_11011981
         Font.Style = []
         ItemHeight = 15
         ParentFont = False
+        PopupMenu = pmNames
         TabOrder = 0
         OnClick = lbNamesClick
       end
@@ -405,7 +401,7 @@ object FMain_11011981: TFMain_11011981
         Align = alTop
         TabOrder = 1
         object ShowNXrefs: TPanel
-          Left = 644
+          Left = 652
           Top = 1
           Width = 111
           Height = 23
@@ -420,7 +416,7 @@ object FMain_11011981: TFMain_11011981
         Left = 646
         Top = 25
         Width = 110
-        Height = 552
+        Height = 579
         Style = lbOwnerDrawFixed
         Align = alRight
         Anchors = []
@@ -450,7 +446,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 0
         Width = 756
-        Height = 589
+        Height = 619
         Align = alClient
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clWindowText
@@ -472,19 +468,19 @@ object FMain_11011981: TFMain_11011981
     Left = 0
     Top = 0
     Width = 250
-    Height = 605
+    Height = 632
     ActivePage = tsRTTIs
     Align = alLeft
     TabOrder = 0
     OnChange = pcInfoChange
-    ExplicitHeight = 580
+    ExplicitHeight = 607
     object tsUnits: TTabSheet
       Caption = 'Units (F2)'
       object lbUnits: TListBox
         Left = 0
         Top = 0
         Width = 242
-        Height = 597
+        Height = 619
         Style = lbOwnerDrawFixed
         AutoComplete = False
         Align = alClient
@@ -502,7 +498,7 @@ object FMain_11011981: TFMain_11011981
         TabOrder = 0
         OnClick = lbUnitsClick
         OnDblClick = lbUnitsDblClick
-        OnDrawItem = lbUnitsDrawItem
+        OnDrawItem = lbUnitItemsDrawItem
         OnKeyDown = lbUnitsKeyDown
         OnMouseMove = lbUnitsMouseMove
       end
@@ -514,7 +510,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 0
         Width = 242
-        Height = 577
+        Height = 604
         AutoComplete = False
         Align = alClient
         Color = clWhite
@@ -531,7 +527,7 @@ object FMain_11011981: TFMain_11011981
         OnDblClick = lbRTTIsDblClick
         OnKeyDown = lbRTTIsKeyDown
         OnMouseMove = lbRTTIsMouseMove
-        ExplicitHeight = 552
+        ExplicitHeight = 579
       end
     end
     object tsForms: TTabSheet
@@ -539,7 +535,7 @@ object FMain_11011981: TFMain_11011981
       ImageIndex = 3
       object Splitter1: TSplitter
         Left = 0
-        Top = 423
+        Top = 445
         Width = 242
         Height = 4
         Cursor = crVSplit
@@ -547,7 +543,6 @@ object FMain_11011981: TFMain_11011981
         Color = clGray
         MinSize = 3
         ParentColor = False
-        ExplicitTop = 503
       end
       object Panel2: TPanel
         Left = 0
@@ -576,7 +571,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 40
         Width = 242
-        Height = 383
+        Height = 405
         AutoComplete = False
         Align = alClient
         Color = clWhite
@@ -597,12 +592,12 @@ object FMain_11011981: TFMain_11011981
       end
       object Panel4: TPanel
         Left = 0
-        Top = 407
+        Top = 434
         Width = 242
         Height = 170
         Align = alBottom
         TabOrder = 2
-        ExplicitTop = 427
+        ExplicitTop = 449
         object lbAliases: TListBox
           Left = 1
           Top = 1
@@ -683,7 +678,7 @@ object FMain_11011981: TFMain_11011981
   end
   object lbUnitItems: TListBox
     Left = 0
-    Top = 609
+    Top = 636
     Width = 1017
     Height = 146
     TabStop = False
@@ -705,13 +700,13 @@ object FMain_11011981: TFMain_11011981
     OnDrawItem = lbUnitItemsDrawItem
     OnKeyDown = lbUnitItemsKeyDown
     OnMouseMove = lbUnitItemsMouseMove
-    ExplicitTop = 584
+    ExplicitTop = 611
     ExplicitWidth = 1009
   end
   object MainMenu: TMainMenu
     AutoHotkeys = maManual
-    Left = 640
-    Top = 72
+    Left = 632
+    Top = 96
     object miFile: TMenuItem
       Caption = '&File'
       object miLoadFile: TMenuItem
@@ -901,6 +896,10 @@ object FMain_11011981: TFMain_11011981
         Caption = '&IDC Generator'
         OnClick = miIDCGeneratorClick
       end
+      object miHiewGenerator: TMenuItem
+        Caption = 'HIEW Generator'
+        OnClick = miHiewGeneratorClick
+      end
       object miLister: TMenuItem
         Caption = 'Lister'
         OnClick = miListerClick
@@ -920,6 +919,10 @@ object FMain_11011981: TFMain_11011981
       object miHex2Double: TMenuItem
         Caption = '&Hex->Double'
         OnClick = miHex2DoubleClick
+      end
+      object mCreateCHeaderFile: TMenuItem
+        Caption = 'Create C header file'
+        OnClick = mCreateCHeaderFileClick
       end
     end
     object miTabs: TMenuItem
@@ -999,12 +1002,16 @@ object FMain_11011981: TFMain_11011981
           Action = acFontAll
           Caption = 'Fonts'
         end
+        object mniShellIntegration1: TMenuItem
+          Caption = 'Shell Integration'
+          OnClick = mniShellIntegration1Click
+        end
       end
     end
   end
   object OpenDlg: TOpenDialog
-    Left = 688
-    Top = 72
+    Left = 696
+    Top = 96
   end
   object pmCode: TPopupMenu
     AutoHotkeys = maManual
@@ -1036,18 +1043,24 @@ object FMain_11011981: TFMain_11011981
       Enabled = False
       OnClick = miEditFunctionCClick
     end
+    object mniN3: TMenuItem
+      Caption = '-'
+    end
+    object miCopyAddressCode: TMenuItem
+      Caption = 'Copy Address'
+      OnClick = miCopyAddressCodeClick
+    end
     object miCopyCode: TMenuItem
       Caption = 'Copy to Clipboard'
       OnClick = miCopyCodeClick
+    end
+    object mniN4: TMenuItem
+      Caption = '-'
     end
     object miFuzzyScanKB: TMenuItem
       Caption = 'Fuzzy scan KB'
       Enabled = False
       OnClick = miFuzzyScanKBClick
-    end
-    object miCopyAddressCode: TMenuItem
-      Caption = 'Copy Address'
-      OnClick = miCopyAddressCodeClick
     end
     object miXRefs: TMenuItem
       Caption = 'XRefs'
@@ -1071,8 +1084,8 @@ object FMain_11011981: TFMain_11011981
     end
   end
   object SaveDlg: TSaveDialog
-    Left = 632
-    Top = 120
+    Left = 736
+    Top = 96
   end
   object pmUnits: TPopupMenu
     AutoHotkeys = maManual
@@ -1199,8 +1212,8 @@ object FMain_11011981: TFMain_11011981
   object pmUnitItems: TPopupMenu
     AutoHotkeys = maManual
     OnPopup = pmUnitItemsPopup
-    Left = 560
-    Top = 104
+    Left = 544
+    Top = 96
     object miSearchItem: TMenuItem
       Caption = 'Search Item'
       Enabled = False
@@ -1231,24 +1244,20 @@ object FMain_11011981: TFMain_11011981
       Caption = 'Search'
       OnClick = miSearchStringClick
     end
-    object miCopyStrings: TMenuItem
-      Caption = 'Copy To Clipboard'
-      OnClick = miCopyStringsClick
-    end
   end
   object pmCodePanel: TPopupMenu
     AutoHotkeys = maManual
     OnPopup = pmCodePanelPopup
-    Left = 672
-    Top = 120
+    Left = 664
+    Top = 96
     object miEmptyHistory: TMenuItem
       Caption = 'Empty History'
       OnClick = miEmptyHistoryClick
     end
   end
   object alMain: TActionList
-    Left = 736
-    Top = 72
+    Left = 816
+    Top = 96
     object acOnTop: TAction
       Category = 'Appearance'
       Caption = 'Always on top'
@@ -1285,12 +1294,12 @@ object FMain_11011981: TFMain_11011981
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
     Font.Style = []
-    Left = 712
-    Top = 112
+    Left = 776
+    Top = 96
   end
   object pmSourceCode: TPopupMenu
     OnPopup = pmSourceCodePopup
-    Left = 464
+    Left = 504
     Top = 96
     object miCopySource2Clipboard: TMenuItem
       Caption = 'Copy to Clipboard'
@@ -1299,6 +1308,14 @@ object FMain_11011981: TFMain_11011981
     object miSetlvartype: TMenuItem
       Caption = 'Set lvar type'
       OnClick = miSetlvartypeClick
+    end
+  end
+  object pmNames: TPopupMenu
+    Left = 464
+    Top = 96
+    object miCopytoClipboardNames: TMenuItem
+      Caption = 'Copy to Clipboard'
+      OnClick = miCopytoClipboardNamesClick
     end
   end
 end

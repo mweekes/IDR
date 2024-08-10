@@ -18,13 +18,19 @@ this word) pleasant.
 IDR make static analysis (analyzed file is not loaded to memory and executed) that allows to safely investigate viruses, 
 trojans and other malware applications, those which executing is dangerous or is not desirable.
 
-The program does not require any installation activity and does not do any records in Windows registry.
+The program does not require any installation activity and does not create any records in Windows registry.
 
-~~Use Borland C++ Builder 6 to build this project.~~
+Use Embarcadero C++ Builder 12 to build this project.
 
-**Use Embarcadero C++ Builder 10.2 Tokyo to build this project.**
+IDR dont require any installations, just copy idr.exe, dis.dll, icons.dll, idr.ico and *.bin files
+to IDR home directory. Message "Cannot Initialize Disasm" means that file dis.dll is absent.
 
-# Embarcadero C++ Builder 10.2 Tokyo Version
+!!!
+Knowledge bases for various Delphi versions can be found here (find files kb*.7z and syskb*.bin).
+
+**Use Embarcadero C++ Builder 12 to build this project.**
+
+# Embarcadero C++ Builder 12 Version
 ### *State:* **Testing**
 ## Notes
 ```Bins``` directory is used for all .bin files
@@ -32,3 +38,6 @@ The program does not require any installation activity and does not do any recor
  * Make previews of forms work
  * Make process dumper work
  * Test all!!
+
+!!!
+In project options use build Release version with no Optimization.

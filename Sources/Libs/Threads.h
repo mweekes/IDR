@@ -8,13 +8,15 @@
 
 // ---------------------------------------------------------------------------
 enum ThreadAnalysisOperation {
-	taStartPrBar, taUpdatePrBar, taUpdateStBar, taUpdateUnits, taUpdateRTTIs, taUpdateVmtList, taUpdateStrings, taUpdateCode, taUpdateXrefs, taUpdateShortClassViewer, taUpdateClassViewer,
-	taUpdateBeforeClassViewer, taFinished
+	taStartPrBar, taUpdatePrBar, taUpdateStBar, 
+	taUpdateUnits, taUpdateRTTIs, taUpdateVmtList, 
+	taUpdateStrings, taUpdateCode, taUpdateXrefs, 
+	taUpdateShortClassViewer, taUpdateClassViewer, taUpdateBeforeClassViewer, 
+	taFinished
 };
 
 struct ThreadAnalysisData {
-	ThreadAnalysisData(int steps, const String& txt) : pbSteps(steps), sbText(txt) {
-	}
+	ThreadAnalysisData(int steps, const String& txt) : pbSteps(steps), sbText(txt) {}
 
 	int pbSteps;
 	String sbText;

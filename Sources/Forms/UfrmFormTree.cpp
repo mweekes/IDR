@@ -3,48 +3,51 @@
 #pragma hdrstop
 
 /*
- #include <memory>
  #include <StrUtils.hpp>
+ #include <memory>
  */
 
-#include <System.StrUtils.hpp>
-#include "UfrmFormTree.h"
 #include "Main.h"
 #include "Misc.h"
+#include "UfrmFormTree.h"
+#include <System.StrUtils.hpp>
 
 // ---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 // ---------------------------------------------------------------------------
 // as: todo: refactor! extern linkage is bad practice (idea: use singleton)
-extern TResourceInfo *ResInfo;
-extern PInfoRec *Infos;
+extern TResourceInfo* ResInfo;
+extern PInfoRec* Infos;
 extern DWORD CodeBase;
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::AddEventsToNode(String compName, TTreeNode* dstNode, TList* evList) {
+void __fastcall TIdrDfmFormTree_11011981::AddEventsToNode(String compName, TTreeNode* dstNode, TList* evList)
+{
 	const int evCnt = evList->Count;
-	for (int m = 0; m < evCnt; m++) {
-		EventListItem *item = (EventListItem*)evList->Items[m];
-		if (SameText(item->CompName, compName)) {
+	for(int m = 0; m < evCnt; m++) {
+		EventListItem* item = (EventListItem*)evList->Items[m];
+		if(SameText(item->CompName, compName)) {
 			tvForm->Items->AddChildObject(dstNode, MakeNodeEventCaption(item), (void*)item->Adr);
 		}
 	}
 }
 
 // ---------------------------------------------------------------------------
-__fastcall TIdrDfmFormTree_11011981::TIdrDfmFormTree_11011981(TComponent* Owner) : TForm(Owner) {
+__fastcall TIdrDfmFormTree_11011981::TIdrDfmFormTree_11011981(TComponent* Owner)
+  : TForm(Owner)
+{
 	ThinkCursor waitCursor;
 
 	TForm* frmOwner = (TForm*)Owner;
 
 	const int compCnt = frmOwner->ComponentCount;
-	if (compCnt > 1)
+	if(compCnt > 1)
 		Caption = frmOwner->Name + " (" + String(compCnt) + " components)";
 	else
 		Caption = frmOwner->Name + " (1 component)";
 
-	std::auto_ptr<TList>evList(new TList);
+	std::auto_ptr<TList> evList(new TList);
 	ResInfo->GetEventsList(frmOwner->Name, evList.get());
 
 	tvForm->Items->BeginUpdate();
@@ -59,22 +62,22 @@ __fastcall TIdrDfmFormTree_11011981::TIdrDfmFormTree_11011981(TComponent* Owner)
 	bool externalParent = false;
 	String externalNames;
 
-	for (int i = 0; i < compCnt; i++) {
+	for(int i = 0; i < compCnt; i++) {
 		currComp = frmOwner->Components[i];
-		if (currComp == this)
+		if(currComp == this)
 			continue; // Don't display Form TreeView
 
 		String tnCaption = MakeNodeCaption(currComp);
 
 		TComponent* parCompo = currComp->GetParentComponent();
 
-		if (currComp->HasParent()) {
+		if(currComp->HasParent()) {
 			// in some very rare cases parent could be located in another module!
 			// so in this case we have true for currComp->HasParent() but NULL for parCompo
-			if (!parCompo) {
+			if(!parCompo) {
 				externalParent = true;
 
-				if (!externalNames.IsEmpty())
+				if(!externalNames.IsEmpty())
 					externalNames += ", ";
 				externalNames += tnCaption;
 			}
@@ -88,17 +91,16 @@ __fastcall TIdrDfmFormTree_11011981::TIdrDfmFormTree_11011981(TComponent* Owner)
 			// they are a) noname (but renamed in IDR)
 			// b) not present in Components[] array
 
-			if (!parentNode && parCompo) {
+			if(!parentNode && parCompo) {
 				TComponent* parCompo2 = parCompo->GetParentComponent();
 				String parName2 = parCompo2->Name;
-				TTreeNode *parentNode2 = FindTreeNodeByTag(parCompo2);
+				TTreeNode* parentNode2 = FindTreeNodeByTag(parCompo2);
 
 				// add noname parent
 				parentNode = tvForm->Items->AddChildObject(parentNode2, MakeNodeCaption(parCompo), parCompo);
 				AddTreeNodeWithTag(parentNode, parCompo);
 			}
-		}
-		else
+		} else
 			parentNode = FindTreeNodeByTag(currComp->Owner);
 
 		childNode = tvForm->Items->AddChildObject(parentNode, tnCaption, currComp);
@@ -109,18 +111,22 @@ __fastcall TIdrDfmFormTree_11011981::TIdrDfmFormTree_11011981(TComponent* Owner)
 	rootNode->Expand(false);
 	tvForm->Items->EndUpdate();
 
-	if (externalParent) {
-		Application->MessageBox(("Form has some component classes defined in external modules:\r\n" + externalNames + ".\r\n\r\nVisualization of these components is not yet implemented").c_str(),
-			L"Warning", MB_OK | MB_ICONWARNING);
+	if(externalParent) {
+		Application->MessageBox(("Form has some component classes defined in external modules:\r\n" + externalNames +
+								 ".\r\n\r\nVisualization of these components is not yet implemented")
+								  .c_str(),
+								String("Warning").c_str(),
+								MB_OK | MB_ICONWARNING);
 	}
 }
 
 // ---------------------------------------------------------------------------
-String TIdrDfmFormTree_11011981::MakeNodeCaption(TComponent* curCompo) {
+String TIdrDfmFormTree_11011981::MakeNodeCaption(TComponent* curCompo)
+{
 	String className = curCompo->ClassName();
 
 	IdrDfmDefaultControl* replControl;
-	if ((replControl = dynamic_cast<IdrDfmDefaultControl*>(curCompo)) != 0)
+	if((replControl = dynamic_cast<IdrDfmDefaultControl*>(curCompo)) != 0)
 		className = "!" + replControl->GetOrigClassName();
 
 	return curCompo->Name + ":" + className;
@@ -130,39 +136,42 @@ String TIdrDfmFormTree_11011981::MakeNodeCaption(TComponent* curCompo) {
 }
 
 // ---------------------------------------------------------------------------
-String TIdrDfmFormTree_11011981::MakeNodeEventCaption(void* item) {
-	if (((EventListItem*)item)->Adr) {
+String TIdrDfmFormTree_11011981::MakeNodeEventCaption(void* item)
+{
+	if(((EventListItem*)item)->Adr) {
 		PInfoRec recN = GetInfoRec(((EventListItem*)item)->Adr);
-		if (recN && recN->HasName())
+		if(recN && recN->HasName())
 			return ((EventListItem*)item)->EventName + "=" + recN->GetName();
 	}
 	return ((EventListItem*)item)->EventName;
 }
 
 // ---------------------------------------------------------------------------
-TTreeNode* __fastcall TIdrDfmFormTree_11011981::FindTreeNodeByTag(const void* tag) {
+TTreeNode* __fastcall TIdrDfmFormTree_11011981::FindTreeNodeByTag(const void* tag)
+{
 	TTreeNodeMap::const_iterator it = NodesMap.find(tag);
-	if (it != NodesMap.end())
+	if(it != NodesMap.end())
 		return it->second;
 
 	return 0;
 }
 
 // ---------------------------------------------------------------------------
-TTreeNode* __fastcall TIdrDfmFormTree_11011981::FindTreeNodeByText(TTreeNode* nodeFrom, const String& txt, bool caseSensitive) {
+TTreeNode* __fastcall TIdrDfmFormTree_11011981::FindTreeNodeByText(TTreeNode* nodeFrom, const String& txt, bool caseSensitive)
+{
 	TTreeNode* tn = 0;
 	bool startScan = nodeFrom ? false : true;
 
 	TTreeNodes* nodes = tvForm->Items;
-	for (int i = 0; i < nodes->Count; ++i) {
-		if (!startScan) {
-			if (nodeFrom == nodes->Item[i])
+	for(int i = 0; i < nodes->Count; ++i) {
+		if(!startScan) {
+			if(nodeFrom == nodes->Item[i])
 				startScan = true;
 			continue;
 		}
 
 		String ttt = nodes->Item[i]->Text;
-		if ((caseSensitive && AnsiContainsStr(nodes->Item[i]->Text, txt)) || (!caseSensitive && AnsiContainsText(nodes->Item[i]->Text, txt))) {
+		if((caseSensitive && AnsiContainsStr(nodes->Item[i]->Text, txt)) || (!caseSensitive && AnsiContainsText(nodes->Item[i]->Text, txt))) {
 			tn = nodes->Item[i];
 			break;
 		}
@@ -172,44 +181,47 @@ TTreeNode* __fastcall TIdrDfmFormTree_11011981::FindTreeNodeByText(TTreeNode* no
 }
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::AddTreeNodeWithTag(TTreeNode* node, const void* tag) {
+void __fastcall TIdrDfmFormTree_11011981::AddTreeNodeWithTag(TTreeNode* node, const void* tag)
+{
 	NodesMap[tag] = node;
 }
 
 // ---------------------------------------------------------------------------
-bool __fastcall TIdrDfmFormTree_11011981::IsEventNode(TTreeNode* selNode) {
+bool __fastcall TIdrDfmFormTree_11011981::IsEventNode(TTreeNode* selNode)
+{
 	return (selNode && !selNode->Text.IsEmpty() && selNode->Text.Pos("="));
 }
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift) {
-	if (VK_ESCAPE == Key) {
+void __fastcall TIdrDfmFormTree_11011981::FormKeyDown(TObject* Sender, WORD& Key, TShiftState Shift)
+{
+	if(VK_ESCAPE == Key) {
 		Key = 0;
 		Close();
 		((TForm*)Owner)->SetFocus();
-	}
-	else if (VK_F3 == Key) {
+	} else if(VK_F3 == Key) {
 		dlgFindFind(Sender);
-	}
-	else if (Shift.Contains(ssCtrl) && 'F' == Key) {
+	} else if(Shift.Contains(ssCtrl) && 'F' == Key) {
 		dlgFind->Execute();
 	}
 }
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::tvFormKeyPress(TObject *Sender, char &Key) {
-	if (VK_RETURN == Key) {
+void __fastcall TIdrDfmFormTree_11011981::tvFormKeyPress(TObject* Sender, char& Key)
+{
+	if(VK_RETURN == Key) {
 		Key = 0;
 		tvFormDblClick(Sender);
 	}
 }
 
 // ---------------------------------------------------------------------------
-void TIdrDfmFormTree_11011981::BorderTheControl(TControl* aControl) {
-	std::auto_ptr<TControlCanvas>C(new TControlCanvas());
+void TIdrDfmFormTree_11011981::BorderTheControl(TControl* aControl)
+{
+	std::auto_ptr<TControlCanvas> C(new TControlCanvas());
 	TWinControl* parCtrl = aControl->Parent;
 
-	if (!parCtrl)
+	if(!parCtrl)
 		parCtrl = (TWinControl*)aControl;
 
 	HDC aDC;
@@ -232,10 +244,9 @@ void TIdrDfmFormTree_11011981::BorderTheControl(TControl* aControl) {
 	AdjustWindowRectEx(&aRect, GetWindowLong(aHandle, GWL_STYLE), bMenu, GetWindowLong(aHandle, GWL_EXSTYLE));
 	MoveWindowOrg(aDC, -aRect.Left, -aRect.Top);
 
-	if (parCtrl == aControl) {
+	if(parCtrl == aControl) {
 		aRect = aControl->ClientRect;
-	}
-	else {
+	} else {
 		aRect = aControl->BoundsRect;
 		InflateRect(&aRect, 2, 2);
 	}
@@ -246,17 +257,18 @@ void TIdrDfmFormTree_11011981::BorderTheControl(TControl* aControl) {
 }
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::tvFormDblClick(TObject *Sender) {
+void __fastcall TIdrDfmFormTree_11011981::tvFormDblClick(TObject* Sender)
+{
 	TTreeNode* selNode = tvForm->Selected;
-	if (!selNode)
+	if(!selNode)
 		return;
 
-	if (IsEventNode(selNode)) {
+	if(IsEventNode(selNode)) {
 		const DWORD Adr = (const DWORD)selNode->Data;
-		if (Adr && IsValidCodeAdr(Adr)) {
+		if(Adr && IsValidCodeAdr(Adr)) {
 			PInfoRec recN = GetInfoRec(Adr);
-			if (recN) {
-				if (recN->kind == ikVMT)
+			if(recN) {
+				if(recN->kind == ikVMT)
 					FMain_11011981->ShowClassViewer(Adr);
 				else
 					FMain_11011981->ShowCode(Adr, 0, -1, -1);
@@ -266,11 +278,11 @@ void __fastcall TIdrDfmFormTree_11011981::tvFormDblClick(TObject *Sender) {
 	}
 
 	TControl* selControl = dynamic_cast<TControl*>((TComponent*)selNode->Data);
-	if (!selControl)
+	if(!selControl)
 		return;
 
 	TWinControl* parControl = selControl->Parent;
-	if (!parControl)
+	if(!parControl)
 		return;
 
 	TForm* ownerForm = (TForm*)Owner;
@@ -278,7 +290,7 @@ void __fastcall TIdrDfmFormTree_11011981::tvFormDblClick(TObject *Sender) {
 	ownerForm->BringToFront();
 	selControl->BringToFront();
 
-	for (int i = 0; i < 2; i++) {
+	for(int i = 0; i < 2; i++) {
 		BorderTheControl(selControl);
 		selControl->Hide();
 		selControl->Update();
@@ -293,14 +305,15 @@ void __fastcall TIdrDfmFormTree_11011981::tvFormDblClick(TObject *Sender) {
 }
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::dlgFindFind(TObject *Sender) {
+void __fastcall TIdrDfmFormTree_11011981::dlgFindFind(TObject* Sender)
+{
 	bool caseSensitive = dlgFind->Options.Contains(frMatchCase);
 
 	TTreeNode* tn = FindTreeNodeByText(tvForm->Selected, dlgFind->FindText, caseSensitive);
-	if (!tn)
+	if(!tn)
 		tn = FindTreeNodeByText(0, dlgFind->FindText.Trim(), caseSensitive);
 
-	if (tn) {
+	if(tn) {
 		tvForm->Selected = tn;
 		tn->Expand(false);
 		tvForm->SetFocus();
@@ -308,29 +321,35 @@ void __fastcall TIdrDfmFormTree_11011981::dlgFindFind(TObject *Sender) {
 }
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::Expand1Click(TObject *Sender) {
-	if (tvForm->Selected)
+void __fastcall TIdrDfmFormTree_11011981::Expand1Click(TObject* Sender)
+{
+	if(tvForm->Selected)
 		tvForm->Selected->Expand(true);
 }
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::Collapse1Click(TObject *Sender) {
-	if (tvForm->Selected)
+void __fastcall TIdrDfmFormTree_11011981::Collapse1Click(TObject* Sender)
+{
+	if(tvForm->Selected)
 		tvForm->Selected->Collapse(false);
 }
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::Find1Click(TObject *Sender) {
+void __fastcall TIdrDfmFormTree_11011981::Find1Click(TObject* Sender)
+{
 	dlgFind->Execute();
 }
 // ---------------------------------------------------------------------------
 
-void __fastcall TIdrDfmFormTree_11011981::FormClose(TObject *Sender, TCloseAction &Action) {
+void __fastcall TIdrDfmFormTree_11011981::FormClose(TObject* Sender, TCloseAction& Action)
+{
 	dlgFind->CloseDialog();
 }
 
 // ---------------------------------------------------------------------------
-void __fastcall TIdrDfmFormTree_11011981::FormCreate(TObject *Sender) {
+void __fastcall TIdrDfmFormTree_11011981::FormCreate(TObject* Sender)
+{
 	ScaleForm(this);
 }
 // ---------------------------------------------------------------------------
+

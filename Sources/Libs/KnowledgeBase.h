@@ -114,8 +114,7 @@ typedef struct {
 #define SCOPE_TMP   32  //Temp struct FIELDINFO, to be deleted
 
 typedef struct FIELDINFO {
-	FIELDINFO() : xrefs(0) {
-	}
+	FIELDINFO() : xrefs(0) {}
 	~FIELDINFO();
 
 	BYTE Scope; // 9-private, 10-protected, 11-public, 12-published
@@ -178,7 +177,7 @@ class MConstInfo {
 public:
 	__fastcall MConstInfo();
 	__fastcall ~MConstInfo();
-
+public:
 	WORD ModuleID;
 	String ConstName;
 	BYTE Type; // 'C'-ConstDecl, 'P'-PDecl (VMT), 'V'-VarCDecl
@@ -211,7 +210,7 @@ class MTypeInfo {
 public:
 	__fastcall MTypeInfo();
 	__fastcall ~MTypeInfo();
-
+public:
 	DWORD Size;
 	WORD ModuleID;
 	String TypeName;
@@ -238,7 +237,7 @@ class MVarInfo {
 public:
 	__fastcall MVarInfo();
 	__fastcall ~MVarInfo();
-
+public:
 	WORD ModuleID;
 	String VarName;
 	BYTE Type; // 'V'-Var;'A'-AbsVar;'S'-SpecVar;'T'-ThreadVar
@@ -250,7 +249,7 @@ class MResStrInfo {
 public:
 	__fastcall MResStrInfo();
 	__fastcall ~MResStrInfo();
-
+public:
 	WORD ModuleID;
 	String ResStrName;
 	String TypeDef;
@@ -261,7 +260,7 @@ class MProcInfo {
 public:
 	__fastcall MProcInfo();
 	__fastcall ~MProcInfo();
-
+public:
 	WORD ModuleID;
 	String ProcName;
 	bool Embedded; // true-содержит вложенные процедуры
@@ -305,10 +304,15 @@ public:
 	int __fastcall GetTypeIdxsByName(char* TypeName, int* TypeIdx);
 	int __fastcall GetTypeIdxByUID(char* UID);
 	int __fastcall GetVarIdx(WORD* ModuleIDs, char* VarName);
+
 	int __fastcall GetResStrIdx(int from, char* ResStrContext);
+	int __fastcall GetResStrIdx(int from, wchar_t* ResStrContext);
 	int __fastcall GetResStrIdx(WORD ModuleID, char* ResStrContext);
+    int __fastcall GetResStrIdx(WORD* ModuleIDs, wchar_t* ResStrContext);
 	int __fastcall GetResStrIdx(WORD* ModuleIDs, char* ResStrName);
+
 	int __fastcall GetProcIdx(WORD ModuleID, char* ProcName);
+	int __fastcall GetProcIdx(WORD ModuleID, wchar_t* ProcName);
 	int __fastcall GetProcIdx(WORD ModuleID, char* ProcName, BYTE* code);
 	int __fastcall GetProcIdx(WORD* ModuleIDs, char* ProcName, BYTE* code);
 	bool __fastcall GetProcIdxs(WORD ModuleID, int* FirstProcIdx, int* LastProcIdx);

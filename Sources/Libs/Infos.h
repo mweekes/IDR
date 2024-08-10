@@ -38,7 +38,7 @@ public:
 	TStringList *interfaces;
 	TList *fields;
 	TList *methods;
-
+public:
 	__fastcall InfoVmtInfo();
 	__fastcall ~InfoVmtInfo();
 	void __fastcall AddInterface(String Value);
@@ -77,7 +77,7 @@ public:
 	int stackSize;
 	TList *args;
 	TList *locals;
-
+public:
 	__fastcall InfoProcInfo();
 	__fastcall ~InfoProcInfo();
 	PARGINFO __fastcall AddArg(PARGINFO aInfo);
@@ -137,14 +137,15 @@ public:
 	void __fastcall AddXref(char Type, DWORD Adr, int Offset);
 	void __fastcall DeleteXref(DWORD Adr);
 	void __fastcall ScanUpItemAndAddRef(int fromPos, DWORD itemAdr, char refType, DWORD refAdr);
-	virtual void __fastcall Save(TStream* outs);
-	virtual void __fastcall Load(TStream* ins, char* buf);
+    virtual void __fastcall Save(FILE* outs);//virtual void __fastcall Save(TStream* outs);
+    virtual void __fastcall Load(FILE* ins, char* buf);//virtual void __fastcall Load(TStream* ins, char* buf);
 	// virtual void __fastcall Skip(TStream* ins, char* buf, BYTE asKind);
 	String __fastcall MakePrototype(int adr, bool showKind, bool showTail, bool multiline, bool fullName, bool allArgs);
 	String __fastcall MakeDelphiPrototype(int Adr, PMethodRec recM);
 	String __fastcall MakeMultilinePrototype(int Adr, int* ArgsBytes, String MethodType);
 	String __fastcall MakeMapName(int Adr);
 	bool __fastcall MakeArgsManually();
+    String __fastcall MakeCppPrototype(int Adr, String FType);
 };
 
 // ---------------------------------------------------------------------------

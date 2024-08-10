@@ -6,10 +6,8 @@ object FIdcSplitSize: TFIdcSplitSize
   ClientWidth = 313
   Color = clBtnFace
   ParentFont = True
-  OldCreateOrder = True
   Position = poScreenCenter
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object Bevel1: TBevel
     Left = 8
     Top = 8

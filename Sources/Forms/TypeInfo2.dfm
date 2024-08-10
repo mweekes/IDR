@@ -10,11 +10,9 @@ object FTypeInfo_11011981: TFTypeInfo_11011981
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
-  PixelsPerInch = 96
   TextHeight = 13
   object memDescription: TMemo
     Left = 0

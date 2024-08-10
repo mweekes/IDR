@@ -7,58 +7,65 @@
 
 #include "UfrmFormTree.h"
 // ---------------------------------------------------------------------------
-typedef struct {
-	String CompName; // Component Name
+typedef struct
+{
+	String CompName;  // Component Name
 	String EventName; // Event Name
-	int Adr; // Event Address
+	int Adr;          // Event Address
 } EventListItem, *PEventListItem;
 
-typedef struct {
-	TMetaClass *RegClass;
-	char *ClassName;
+typedef struct
+{
+	TMetaClass* RegClass;
+	char* ClassName;
 } RegClassInfo, *PRegClassInfo;
 
-typedef struct {
+typedef struct
+{
 	String EventName; // Event name (OnClose)
-	String ProcName; // Event handler name (CloseBtnClick)
+	String ProcName;  // Event handler name (CloseBtnClick)
 } EventInfo, *PEventInfo;
 
-typedef struct {
-	bool Inherit; // Component is inherited
-	bool HasGlyph; // Component has property "Glyph"
-	String Name; // Component name
+typedef struct
+{
+	bool Inherit;     // Component is inherited
+	bool HasGlyph;    // Component has property "Glyph"
+	String Name;      // Component name
 	String ClassName; // Component class
-	TList *Events; // EventInfo list
+	TList* Events;    // EventInfo list
 } ComponentInfo, *PComponentInfo;
 
 class IdrDfmLoader;
 
-#define     FF_INHERITED        1
-#define     FF_HASNOTEBOOK      2
+#define FF_INHERITED   1
+#define FF_HASNOTEBOOK 2
 
 // Records to resource list
-class TDfm {
-public:
+class TDfm
+{
+  public:
 	__fastcall TDfm();
 	__fastcall ~TDfm();
 
-	BYTE Open; // 2 - form opened; 1 - form closed but loader not destroyed; 0 - form closed
-	BYTE Flags; // Form flags (see FF_...)
-	String ResName; // Resource name (ABOUTDIALOG)
-	String Name; // Form name (AboutDialog)
-	String ClassName; // Form class (TAboutDialog)
-	TMemoryStream *MemStream; // Memory Stream, containing Resource Data
-	TDfm *ParentDfm; // Parent form
-	TList *Events; // Form events list
-	TList *Components; // Form components list
-	TForm *Form; // Pointer to opened form
-	IdrDfmLoader *Loader; // Form loader
+	BYTE
+	  Open; // 2 - form opened; 1 - form closed but loader not destroyed; 0 - form closed
+	BYTE Flags;               // Form flags (see FF_...)
+	String ResName;           // Resource name (ABOUTDIALOG)
+	String Name;              // Form name (AboutDialog)
+	String ClassName;         // Form class (TAboutDialog)
+	TMemoryStream* MemStream; // Memory Stream, containing Resource Data
+	TDfm* ParentDfm;          // Parent form
+	TList* Events;            // Form events list
+	TList* Components;        // Form components list
+	TForm* Form;              // Pointer to opened form
+	IdrDfmLoader* Loader;     // Form loader
 
 	bool __fastcall IsFormComponent(String CompName);
 };
 
-class TResourceInfo {
-public:
+class TResourceInfo
+{
+  public:
 	__fastcall TResourceInfo();
 	__fastcall ~TResourceInfo();
 	void __fastcall GetFormAsText(TDfm* Dfm, TStrings* DstList);
@@ -78,45 +85,51 @@ public:
 	int Counter;
 	HINSTANCE hFormPlugin;
 	String FormPluginName;
-	TList *FormList; // Form names list
-	TStringList *Aliases; // Aliases list
+	TList* FormList;      // Form names list
+	TStringList* Aliases; // Aliases list
 };
 
-class TMyControl : public TControl {
-public:
+class TMyControl : public TControl
+{
+  public:
 	__property OnClick;
 	__property OnMouseDown;
 	__property PopupMenu;
 };
 
-class IdrDfmReader : public TReader {
-public:
+class IdrDfmReader : public TReader
+{
+  public:
 	__fastcall IdrDfmReader(TStream* Stream, int BufSize);
 
 	__property PropName;
 };
 
-class TComponentEvents : public TCollectionItem {
-public:
+class TComponentEvents : public TCollectionItem
+{
+  public:
 	__fastcall TComponentEvents(TCollection* Owner);
 	virtual __fastcall ~TComponentEvents();
 
-	TComponent *Component;
-	TStringList *FoundEvents;
+	TComponent* Component;
+	TStringList* FoundEvents;
 };
 
-typedef void __fastcall(__closure * TFindMethodSourceEvent)(TObject * Sender, const String & ClassName, const String & MethodName);
+typedef void __fastcall(__closure* TFindMethodSourceEvent)(TObject* Sender,
+  const String& ClassName,
+  const String& MethodName);
 
-class IdrDfmForm : public TForm {
-public:
+class IdrDfmForm : public TForm
+{
+  public:
 	__fastcall IdrDfmForm(TComponent* Owner);
 	__fastcall IdrDfmForm(TComponent* Owner, int Dummy);
 	virtual __fastcall ~IdrDfmForm();
 
 	String originalClassName;
 	String originalClassType;
-	TComponentEvents *current;
-	TCollection *compsEventsList;
+	TComponentEvents* current;
+	TCollection* compsEventsList;
 	TPopupMenu* evPopup;
 	TIdrDfmFormTree_11011981* frmTree;
 
@@ -124,77 +137,110 @@ public:
 	void __fastcall SetupControlResetShortcut(TComponent* component);
 	void __fastcall SetDesigning(bool value, bool SetChildren);
 	void __fastcall SetMyHandlers();
-	__property TFindMethodSourceEvent OnFindMethod = {read = FOnFindMethod, write = FOnFindMethod, default = 0};
+	__property TFindMethodSourceEvent OnFindMethod = { read = FOnFindMethod,
+													   write = FOnFindMethod,
+													   default = 0 };
 
-protected:
+  protected:
 	virtual void __fastcall CreateHandle();
-	void __fastcall SetupControlHint(String FormName, TControl* Control, String InitHint);
+	void __fastcall SetupControlHint(String FormName,
+									 TControl* Control,
+									 String InitHint);
 	void __fastcall SetupMenuItem(TMenuItem* mi, String searchName);
 	void __fastcall ActionExecute(TObject* Sender);
 	void __fastcall miClick(TObject* Sender);
-	void __fastcall ControlMouseDown(TObject* Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
-	void __fastcall miPopupClick(TObject *Sender);
+	void __fastcall ControlMouseDown(TObject* Sender,
+									 TMouseButton Button,
+									 TShiftState Shift,
+									 int X,
+									 int Y);
+	void __fastcall miPopupClick(TObject* Sender);
 
-	BEGIN_MESSAGE_MAP VCL_MESSAGE_HANDLER(CM_DIALOGKEY, TCMDialogKey, CMDialogKey) END_MESSAGE_MAP(TForm) private : TFindMethodSourceEvent FOnFindMethod;
+	BEGIN_MESSAGE_MAP
+	VCL_MESSAGE_HANDLER(CM_DIALOGKEY, TCMDialogKey, CMDialogKey)
+	END_MESSAGE_MAP(TForm)
+  private:
+	TFindMethodSourceEvent FOnFindMethod;
 	String __fastcall getFormName();
 	void __fastcall DoFindMethod(String& methodName);
 	void __fastcall CMDialogKey(TCMDialogKey& Message);
-	void __fastcall MyFormShow(TObject *Sender);
-	void __fastcall MyFormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall MyFormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall MyShortCutEvent(Messages::TWMKey &Msg, bool &Handled);
-	void __fastcall ShowMyPopupMenu(String FormName, String ControlName, bool show);
+	void __fastcall MyFormShow(TObject* Sender);
+	void __fastcall MyFormClose(TObject* Sender, TCloseAction& Action);
+	void __fastcall MyFormKeyDown(TObject* Sender,
+								  WORD& Key,
+								  TShiftState Shift);
+	void __fastcall MyShortCutEvent(Messages::TWMKey& Msg, bool& Handled);
+	void __fastcall ShowMyPopupMenu(String FormName,
+									String ControlName,
+									bool show);
 };
 
-class IdrDfmLoader : public TComponent {
-public:
+class IdrDfmLoader : public TComponent
+{
+  public:
 	__fastcall IdrDfmLoader(TComponent* Owner);
 	virtual __fastcall ~IdrDfmLoader();
 
-	TForm* __fastcall LoadForm(TStream* dfmStream, TDfm* dfm, bool loadingParent = false);
-	__property TFindMethodSourceEvent OnFindMethod = {read = FOnFindMethod, write = SetOnFindMethod, default = 0};
+	TForm* __fastcall LoadForm(TStream* dfmStream,
+							   TDfm* dfm,
+							   bool loadingParent = false);
+	__property TFindMethodSourceEvent OnFindMethod = { read = FOnFindMethod,
+													   write = SetOnFindMethod,
+													   default = 0 };
 
-protected:
+  protected:
 	int Counter;
-	TComponentEvents *Current;
-	TCollection *CompsEventsList;
+	TComponentEvents* Current;
+	TCollection* CompsEventsList;
 	String lastClassAliasName;
 
-	void __fastcall AncestorNotFound(TReader* Reader, String ComponentName, TMetaClass* ComponentClass, TComponent* &Component);
-	void __fastcall ReaderError(TReader* Reader, String Message, bool &Handled);
-	void __fastcall FindComponentClass(TReader* Reader, String ClassName, TMetaClass* &ComponentClass);
-	void __fastcall CreateComponent(TReader* Reader, TMetaClass* ComponentClass, TComponent* &Component);
-	void __fastcall FindMethod(TReader* Reader, String MethodName, void* &Address, bool &Error);
-	void __fastcall SetComponentName(TReader* Reader, TComponent* Component, String &Name);
+	void __fastcall AncestorNotFound(TReader* Reader,
+									 String ComponentName,
+									 TMetaClass* ComponentClass,
+									 TComponent*& Component);
+	void __fastcall ReaderError(TReader* Reader, String Message, bool& Handled);
+	void __fastcall FindComponentClass(TReader* Reader,
+									   String ClassName,
+									   TMetaClass*& ComponentClass);
+	void __fastcall CreateComponent(TReader* Reader,
+									TMetaClass* ComponentClass,
+									TComponent*& Component);
+	void __fastcall FindMethod(TReader* Reader,
+							   String MethodName,
+							   void*& Address,
+							   bool& Error);
+	void __fastcall SetComponentName(TReader* Reader,
+									 TComponent* Component,
+									 String& Name);
 
-	void __fastcall DoReferenceName(TReader* Reader, String &Name);
+	void __fastcall DoReferenceName(TReader* Reader, String& Name);
 	void __fastcall SetOnFindMethod(TFindMethodSourceEvent method);
 	bool __fastcall HasGlyph(String ClassName);
 
-private:
+  private:
 	IdrDfmForm* dfmForm;
 	TFindMethodSourceEvent FOnFindMethod;
 
-	TComponent *FindComp(TComponent* Owner, String& compnay);
+	TComponent* FindComp(TComponent* Owner, String& compnay);
 };
 
-class IdrDfmDefaultControl : public TPanel {
-public:
+class IdrDfmDefaultControl : public TPanel
+{
+  public:
+	//__fastcall IdrDfmDefaultControl(TObject* Owner);
 	__fastcall IdrDfmDefaultControl(TComponent* Owner);
 
 	bool IsVisible();
 	void SetClassName(const String& name, const String& mappedName);
 
-	String GetOrigClassName() {
-		return originalClassName;
-	}
+	String GetOrigClassName() { return originalClassName; }
 
-protected:
+  protected:
 	virtual void __fastcall Loaded();
 	virtual void __fastcall ReadState(TReader* Reader);
 	virtual void __fastcall Paint();
 
-private:
+  private:
 	String originalClassName, mappedClassName;
 
 	bool HasIconForClass(const String& name);
@@ -202,16 +248,20 @@ private:
 
 	// image for std nonvisual controls (dialogs, etc) (dclstd60.bpl has images)
 	TImage* imgIcon;
-
-	void __fastcall ImageMouseDown(TObject* Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
-
+	
+	void __fastcall ImageMouseDown(TObject* Sender,
+								   TMouseButton Button,
+								   TShiftState Shift,
+								   int X,
+								   int Y);
 };
 
-class IdrImageControl : public TImage {
-public:
+class IdrImageControl : public TImage
+{
+  public:
 	__fastcall IdrImageControl(TComponent* Owner);
 
-protected:
+  protected:
 	virtual void __fastcall Paint();
 };
 // ---------------------------------------------------------------------------

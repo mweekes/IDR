@@ -1,45 +1,60 @@
 object FPlugins: TFPlugins
   Left = 550
   Top = 365
+  Margins.Left = 2
+  Margins.Top = 2
+  Margins.Right = 2
+  Margins.Bottom = 2
   Caption = 'Plugins'
-  ClientHeight = 248
-  ClientWidth = 532
+  ClientHeight = 178
+  ClientWidth = 419
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -13
+  Font.Height = -10
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
   OnShow = FormShow
-  PixelsPerInch = 120
-  TextHeight = 16
+  TextHeight = 13
   object cklbPluginsList: TCheckListBox
     Left = 0
     Top = 0
-    Width = 532
-    Height = 209
-    OnClickCheck = cklbPluginsListClickCheck
+    Width = 419
+    Height = 167
+    Margins.Left = 2
+    Margins.Top = 2
+    Margins.Right = 2
+    Margins.Bottom = 2
     Align = alTop
+    ItemHeight = 13
     TabOrder = 0
+    OnClickCheck = cklbPluginsListClickCheck
     OnDblClick = cklbPluginsListDblClick
   end
   object bOk: TButton
-    Left = 144
-    Top = 216
-    Width = 75
-    Height = 25
+    Left = 115
+    Top = 173
+    Width = 60
+    Height = 20
+    Margins.Left = 2
+    Margins.Top = 2
+    Margins.Right = 2
+    Margins.Bottom = 2
     Caption = 'Ok'
     TabOrder = 1
     OnClick = bOkClick
   end
   object bCancel: TButton
-    Left = 320
-    Top = 216
-    Width = 75
-    Height = 25
+    Left = 256
+    Top = 173
+    Width = 60
+    Height = 20
+    Margins.Left = 2
+    Margins.Top = 2
+    Margins.Right = 2
+    Margins.Bottom = 2
     Caption = 'Cancel'
     TabOrder = 2
     OnClick = bCancelClick

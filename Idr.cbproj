@@ -75,8 +75,8 @@
         <ProjectType>CppVCLApplication</ProjectType>
         <PackageImports>DataSnapIndy10ServerTransport;bindcompfmx;DBXSqliteDriver;vcldbx;fmx;rtl;dbrtl;DbxClientDriver;IndySystem;bindcomp;inetdb;vclib;inetdbbde;DBXInterBaseDriver;DataSnapClient;DataSnapCommon;DBXOdbcDriver;DataSnapServer;DataSnapProviderClient;xmlrtl;DBXSybaseASEDriver;ibxpress;DbxCommonDriver;vclimg;IndyProtocols;dbxcds;DBXMySQLDriver;DatasnapConnectorsFreePascal;MetropolisUILiveTile;soaprtl;vclactnband;bindengine;vcldb;bindcompdbx;vcldsnap;bindcompvcl;vclie;vcltouch;DBXDb2Driver;bcbsmp;DBXOracleDriver;CustomIPTransport;vclribbon;VclSmp;dsnap;IndyIPServer;DBXInformixDriver;fmxase;vcl;IndyCore;DataSnapConnectors;IndyIPCommon;CloudService;DBXMSSQLDriver;dsnapcon;DBXFirebirdDriver;inet;fmxobj;vclx;inetdbxpress;svn;DBXSybaseASADriver;fmxdae;bdertl;dbexpress;bcbie;adortl;IndyIPClient;$(PackageImports)</PackageImports>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-        <AllPackageLibs>vcl.lib;rtl.lib;bcbsmp.lib;vclx.lib;vclimg.lib</AllPackageLibs>
-        <_TCHARMapping>char</_TCHARMapping>
+        <AllPackageLibs>vcl.lib;rtl.lib;bcbsmp.lib;vclx.lib;vclimg.lib;Tee.lib</AllPackageLibs>
+        <_TCHARMapping>wchar_t</_TCHARMapping>
         <Multithreaded>true</Multithreaded>
         <Icon_MainIcon>$(BDS)\bin\cbuilder_PROJECTICON.ico</Icon_MainIcon>
         <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
@@ -84,8 +84,8 @@
         <SanitizedProjectName>Idr</SanitizedProjectName>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <IncludePath>Sources\Libs\;Sources\Forms\;Sources\;$(IncludePath)</IncludePath>
-        <ILINK_LibraryPath>Sources\Libs\;Sources\Forms\;Sources\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+        <IncludePath>Sources\rc\;Sources\Libs\;Sources\Forms\;Sources\;$(IncludePath)</IncludePath>
+        <ILINK_LibraryPath>Sources\rc\;Sources\Libs\;Sources\Forms\;Sources\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <DynamicRTL>true</DynamicRTL>
         <PostBuildEvent><![CDATA[XCOPY /Y /E /H "$(PROJECTDIR)\Dll" "$(OUTPUTDIR)"
 $(PostBuildEvent)]]></PostBuildEvent>
@@ -134,7 +134,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <LinkPackageImports>vcl.bpi;rtl.bpi;bcbsmp.bpi;vclx.bpi;vclimg.bpi</LinkPackageImports>
         <Icon_MainIcon>Images\idr.ico</Icon_MainIcon>
         <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)$(CC_SUFFIX)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
-        <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
+        <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+        <_TCHARMapping>wchar_t</_TCHARMapping>
+        <BCC_InstructionSet>6</BCC_InstructionSet>
+        <LinkPackageStatics>Tee.lib</LinkPackageStatics>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64x)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -145,9 +148,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
-        <LinkPackageImports>rtl.bpi;vcl.bpi;vclimg.bpi;vclx.bpi</LinkPackageImports>
+        <LinkPackageImports>vcl.bpi;rtl.bpi;bcbsmp.bpi;vclx.bpi;vclimg.bpi</LinkPackageImports>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
+        <LinkPackageStatics>Tee.lib</LinkPackageStatics>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64x)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -164,176 +168,208 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>FAboutDlg_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\AboutDlg.h</DependentOn>
-            <BuildOrder>3</BuildOrder>
+            <BuildOrder>26</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\ActiveProcesses.cpp">
             <Form>FActiveProcesses</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\ActiveProcesses.h</DependentOn>
-            <BuildOrder>24</BuildOrder>
+            <BuildOrder>27</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Sources\Forms\Analyze1.cpp">
+            <BuildOrder>32</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Sources\Forms\Analyze2.cpp">
+            <BuildOrder>33</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Sources\Forms\AnalyzeArguments.cpp">
+            <BuildOrder>34</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Sources\Forms\CXrefs.cpp">
+            <BuildOrder>35</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\EditFieldsDlg.cpp">
             <Form>FEditFieldsDlg_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\EditFieldsDlg.h</DependentOn>
-            <BuildOrder>18</BuildOrder>
+            <BuildOrder>21</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\EditFunctionDlg.cpp">
             <Form>FEditFunctionDlg_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\EditFunctionDlg.h</DependentOn>
-            <BuildOrder>17</BuildOrder>
+            <BuildOrder>20</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\Exit.cpp">
             <Form>FExit_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\Exit.h</DependentOn>
-            <BuildOrder>31</BuildOrder>
+            <BuildOrder>30</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\Explorer.cpp">
             <Form>FExplorer_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\Explorer.h</DependentOn>
-            <BuildOrder>15</BuildOrder>
+            <BuildOrder>18</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\FindDlg.cpp">
             <Form>FindDlg_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\FindDlg.h</DependentOn>
-            <BuildOrder>14</BuildOrder>
+            <BuildOrder>17</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\Hex2Double.cpp">
             <Form>FHex2DoubleDlg_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\Hex2Double.h</DependentOn>
-            <BuildOrder>22</BuildOrder>
+            <BuildOrder>24</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\IdcSplitSize.cpp">
             <Form>FIdcSplitSize</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\IdcSplitSize.h</DependentOn>
-            <BuildOrder>21</BuildOrder>
+            <BuildOrder>23</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\InputDlg.cpp">
             <Form>FInputDlg_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\InputDlg.h</DependentOn>
-            <BuildOrder>12</BuildOrder>
+            <BuildOrder>15</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\KBViewer.cpp">
             <Form>FKBViewer_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\KBViewer.h</DependentOn>
-            <BuildOrder>16</BuildOrder>
+            <BuildOrder>19</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\Legend.cpp">
             <Form>FLegend_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\Legend.h</DependentOn>
-            <BuildOrder>19</BuildOrder>
+            <BuildOrder>22</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\Main.cpp">
             <Form>FMain_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\Main.h</DependentOn>
-            <BuildOrder>25</BuildOrder>
+            <BuildOrder>14</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\Plugins.cpp">
             <Form>FPlugins</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\Plugins.h</DependentOn>
-            <BuildOrder>23</BuildOrder>
+            <BuildOrder>25</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\ProgressBar.cpp">
             <Form>FProgressBar</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\ProgressBar.h</DependentOn>
-            <BuildOrder>28</BuildOrder>
+            <BuildOrder>29</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\StringInfo.cpp">
             <Form>FStringInfo_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\StringInfo.h</DependentOn>
-            <BuildOrder>13</BuildOrder>
+            <BuildOrder>16</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Sources\Forms\TabNames.cpp">
+            <BuildOrder>36</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Sources\Forms\TabRTTIs.cpp">
+            <BuildOrder>37</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Sources\Forms\TabStrings.cpp">
+            <BuildOrder>38</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Sources\Forms\TabUnits.cpp">
+            <BuildOrder>39</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\TypeInfo2.cpp">
             <Form>FTypeInfo_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\TypeInfo2.h</DependentOn>
-            <BuildOrder>26</BuildOrder>
+            <BuildOrder>28</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Forms\UfrmFormTree.cpp">
             <Form>IdrDfmFormTree_11011981</Form>
             <FormType>dfm</FormType>
             <DependentOn>Sources\Forms\UfrmFormTree.h</DependentOn>
-            <BuildOrder>10</BuildOrder>
+            <BuildOrder>13</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\Decompiler.cpp">
             <DependentOn>Sources\Libs\Decompiler.h</DependentOn>
-            <BuildOrder>5</BuildOrder>
+            <BuildOrder>2</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\Disasm.cpp">
             <DependentOn>Sources\Libs\Disasm.h</DependentOn>
-            <BuildOrder>6</BuildOrder>
+            <BuildOrder>3</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\IDCGen.cpp">
             <DependentOn>Sources\Libs\IDCGen.h</DependentOn>
-            <BuildOrder>20</BuildOrder>
+            <BuildOrder>8</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\Infos.cpp">
             <DependentOn>Sources\Libs\Infos.h</DependentOn>
-            <BuildOrder>7</BuildOrder>
+            <BuildOrder>4</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\KnowledgeBase.cpp">
             <DependentOn>Sources\Libs\KnowledgeBase.h</DependentOn>
-            <BuildOrder>8</BuildOrder>
+            <BuildOrder>5</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\Misc.cpp">
             <DependentOn>Sources\Libs\Misc.h</DependentOn>
-            <BuildOrder>4</BuildOrder>
+            <BuildOrder>1</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\PEHeader.cpp">
             <DependentOn>Sources\Libs\PEHeader.h</DependentOn>
-            <BuildOrder>29</BuildOrder>
+            <BuildOrder>11</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\ProcessManager.cpp">
             <DependentOn>Sources\Libs\ProcessManager.h</DependentOn>
-            <BuildOrder>28</BuildOrder>
+            <BuildOrder>10</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\Resources.cpp">
             <DependentOn>Sources\Libs\Resources.h</DependentOn>
-            <BuildOrder>9</BuildOrder>
+            <BuildOrder>6</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\Singleton.cpp">
             <DependentOn>Sources\Libs\Singleton.h</DependentOn>
-            <BuildOrder>30</BuildOrder>
+            <BuildOrder>12</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\Threads.cpp">
             <DependentOn>Sources\Libs\Threads.h</DependentOn>
-            <BuildOrder>27</BuildOrder>
+            <BuildOrder>9</BuildOrder>
         </CppCompile>
         <CppCompile Include="Sources\Libs\UFileDropper.cpp">
             <DependentOn>Sources\Libs\UFileDropper.h</DependentOn>
-            <BuildOrder>11</BuildOrder>
+            <BuildOrder>7</BuildOrder>
         </CppCompile>
-        <FormResources Include="Sources\Forms\StringInfo.dfm"/>
+        <ResourceCompile Include="Sources\rc\IdcDialog.rc">
+            <Form>IdcDialog.res</Form>
+            <BuildOrder>40</BuildOrder>
+        </ResourceCompile>
+        <ResourceCompile Include="Sources\rc\manifest.rc">
+            <Form>manifest.res</Form>
+            <BuildOrder>41</BuildOrder>
+        </ResourceCompile>
         <FormResources Include="Sources\Forms\TypeInfo2.dfm"/>
         <FormResources Include="Sources\Forms\UfrmFormTree.dfm"/>
-        <FormResources Include="Sources\Forms\ProgressBar.dfm"/>
+        <FormResources Include="Sources\Forms\StringInfo.dfm"/>
         <FormResources Include="Sources\Forms\EditFieldsDlg.dfm"/>
         <FormResources Include="Sources\Forms\EditFunctionDlg.dfm"/>
-        <FormResources Include="Sources\Forms\Explorer.dfm"/>
-        <FormResources Include="Sources\Forms\ActiveProcesses.dfm"/>
         <FormResources Include="Sources\Forms\AboutDlg.dfm"/>
-        <FormResources Include="Sources\Forms\FindDlg.dfm"/>
+        <FormResources Include="Sources\Forms\ActiveProcesses.dfm"/>
+        <FormResources Include="Sources\Forms\Exit.dfm"/>
+        <FormResources Include="Sources\Forms\KBViewer.dfm"/>
         <FormResources Include="Sources\Forms\Legend.dfm"/>
         <FormResources Include="Sources\Forms\Main.dfm"/>
         <FormResources Include="Sources\Forms\Plugins.dfm"/>
-        <FormResources Include="Sources\Forms\KBViewer.dfm"/>
+        <FormResources Include="Sources\Forms\ProgressBar.dfm"/>
+        <FormResources Include="Sources\Forms\Explorer.dfm"/>
+        <FormResources Include="Sources\Forms\FindDlg.dfm"/>
         <FormResources Include="Sources\Forms\Hex2Double.dfm"/>
         <FormResources Include="Sources\Forms\IdcSplitSize.dfm"/>
         <FormResources Include="Sources\Forms\InputDlg.dfm"/>
-        <FormResources Include="Sources\Forms\Exit.dfm"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -355,7 +391,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
                     <ProjectProperties Name="AutoShowDeps">False</ProjectProperties>
                     <ProjectProperties Name="ManagePaths">True</ProjectProperties>
                     <ProjectProperties Name="VerifyPackages">True</ProjectProperties>
-                    <ProjectProperties Name="IndexFiles">False</ProjectProperties>
+                    <ProjectProperties Name="IndexFiles">True</ProjectProperties>
                 </ProjectProperties>
                 <Source>
                     <Source Name="MainSource">Idr.cpp</Source>
@@ -1415,46 +1451,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\ProgressBar.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\PEHeader.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\ProcessManager.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\EditFieldsDlg.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Explorer.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Threads.cpp'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
@@ -1495,7 +1491,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\ProgressBar.cpp'">
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Exit.h'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
@@ -1511,7 +1507,263 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Exit.h'">
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\ProgressBar.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\UFileDropper.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Disasm.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Plugins.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Disasm.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\IDCGen.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Main.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Singleton.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Plugins.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Analyze1.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\StringInfo.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\TabUnits.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Main.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Misc.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Misc.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\IDCGen.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\EditFunctionDlg.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\PEHeader.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Idr.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Explorer.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\TabRTTIs.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\ActiveProcesses.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\ActiveProcesses.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\TypeInfo2.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\TabStrings.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\StringInfo.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\CXrefs.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\TabNames.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\ProgressBar.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\PEHeader.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\ProcessManager.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\EditFieldsDlg.h'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Explorer.h'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
@@ -1551,22 +1803,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\UFileDropper.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Disasm.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\FindDlg.h'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
@@ -1583,15 +1819,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Disasm.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\IDCGen.cpp'">
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\EditFunctionDlg.h'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
@@ -1615,23 +1843,15 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\InputDlg.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\UfrmFormTree.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\EditFunctionDlg.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Main.h'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
@@ -1647,23 +1867,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Plugins.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\InputDlg.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Singleton.h'">
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\AnalyzeArguments.cpp'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
@@ -1703,23 +1907,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Plugins.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\KnowledgeBase.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\StringInfo.h'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
@@ -1743,79 +1931,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Main.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Misc.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Misc.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\TypeInfo2.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\IDCGen.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\EditFunctionDlg.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\ProcessManager.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\PEHeader.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Explorer.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Idr.cpp'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
@@ -1831,23 +1947,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\ActiveProcesses.cpp'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\ActiveProcesses.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\TypeInfo2.cpp'">
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\ProcessManager.h'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
@@ -1856,6 +1956,14 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Libs\Singleton.cpp'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\Analyze2.cpp'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
@@ -1872,14 +1980,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\KBViewer.h'">
-        <PreBuildEvent/>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>XCOPY /Y /E /H &quot;$(PROJECTDIR)\Dll&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(FileToCompile)'=='Sources\Forms\StringInfo.cpp'">
         <PreBuildEvent/>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
