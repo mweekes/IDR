@@ -1,4 +1,4 @@
-extern WideString __fastcall UnicodeEncode(String Str, int CodePage);
+extern WideString __fastcall UnicodeEncode(AnsiString Str, int CodePage);
 //---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // ***************************************************************************
@@ -94,7 +94,7 @@ void __fastcall TFMain_11011981::lbStringsClick(TObject* Sender)
 		DWORD adr;
 		String line = lbStrings->Items->Strings[lbStrings->ItemIndex];
 		//sscanf(line.c_str() + 1, "%lX", &adr);
-		sscanf(line.c_str(), "%lX", &adr);
+		swscanf(line.c_str(), L"%lX", &adr);
 		ShowStringXrefs(adr, -1);
 	}
 }
@@ -105,7 +105,7 @@ void __fastcall TFMain_11011981::lbStringsDblClick(TObject* Sender)
 	DWORD adr;
 	String line = lbStrings->Items->Strings[lbStrings->ItemIndex];
 	//sscanf(line.c_str() + 1, "%lX", &adr);
-	sscanf(line.c_str(), "%lX", &adr);
+	swscanf(line.c_str(), L"%lX", &adr);
 	if(IsValidImageAdr(adr)) {
 		PInfoRec recN = GetInfoRec(adr);
 
@@ -185,7 +185,7 @@ void __fastcall TFMain_11011981::miSearchStringClick(TObject* Sender)
 		DWORD adr;
 		String line = lbStrings->Items->Strings[lbStrings->ItemIndex];
 		//sscanf(line.c_str() + 1, "%lX", &adr);
-		sscanf(line.c_str(), "%lX", &adr);
+		swscanf(line.c_str(), L"%lX", &adr);
 		ShowStringXrefs(adr, -1);
 	}
 }

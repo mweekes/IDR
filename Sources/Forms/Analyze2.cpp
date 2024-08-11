@@ -1986,7 +1986,7 @@ String __fastcall TFMain_11011981::AnalyzeTypes(DWORD parentAdr, int callPos, DW
 			if(ident != -1) {
 				HINSTANCE hInst = LoadLibraryEx(SourceFile.c_str(), 0, LOAD_LIBRARY_AS_DATAFILE);
 				if(hInst) {
-					int bytes = LoadString(hInst, (UINT)ident, buf, 1024);
+					int bytes = LoadStringA(hInst, (UINT)ident, buf, 1024);
 					if(bytes)
 						AddPicode(callPos, OP_COMMENT, "'" + String(buf, bytes) + "'", 0);
 					FreeLibrary(hInst);
@@ -2518,7 +2518,7 @@ String __fastcall TFMain_11011981::AnalyzeTypes(DWORD parentAdr, int callPos, DW
 								if(hInst) {
 									DWORD resid = *((DWORD*)(Code + itemPos + 4));
 									if(resid < 0x10000) {
-										int Bytes = LoadString(hInst, (UINT)resid, buf, 1024);
+										int Bytes = LoadStringA(hInst, (UINT)resid, buf, 1024);
 										recN1->rsInfo->value = String(buf, Bytes);
 									}
 									FreeLibrary(hInst);

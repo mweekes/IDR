@@ -34,7 +34,7 @@ void __fastcall TFPlugins::FormShow(TObject* Sender)
 		ChDir(PluginsPath);
 		if(!FindFirst("*.dll", faArchive, sr)) {
 			do {
-				HINSTANCE hModule = LoadLibrary(AnsiString(sr.Name).c_str());
+				HINSTANCE hModule = LoadLibrary(sr.Name.c_str());
 				if(hModule) {
 					String info = "";
 					fnRegisterPlugIn = (void(__stdcall*)(LPCTSTR*))GetProcAddress(hModule, "RegisterPlugIn");
@@ -74,7 +74,7 @@ void __fastcall TFPlugins::cklbPluginsListDblClick(TObject* Sender)
 	if(pos > 0)
 		filename = line.SubString(1, pos - 1).Trim();
 	if(filename != "") {
-		HINSTANCE hModule = LoadLibrary(AnsiString(PluginsPath + "\\" + filename).c_str());
+		HINSTANCE hModule = LoadLibrary(String(PluginsPath + L"\\" + filename).c_str());
 		if(hModule) {
 			fnAboutPlugIn = (void(__stdcall*)(void))GetProcAddress(hModule, "AboutPlugIn");
 			if(fnAboutPlugIn)

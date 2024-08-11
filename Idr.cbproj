@@ -138,6 +138,8 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <_TCHARMapping>wchar_t</_TCHARMapping>
         <BCC_InstructionSet>6</BCC_InstructionSet>
         <LinkPackageStatics>Tee.lib</LinkPackageStatics>
+        <ILINK_LargeAddressAware>true</ILINK_LargeAddressAware>
+        <VerInfo_Debug>true</VerInfo_Debug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64x)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -147,7 +149,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <LinkPackageImports>vcl.bpi;rtl.bpi;bcbsmp.bpi;vclx.bpi;vclimg.bpi</LinkPackageImports>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
@@ -176,18 +177,22 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <DependentOn>Sources\Forms\ActiveProcesses.h</DependentOn>
             <BuildOrder>27</BuildOrder>
         </CppCompile>
-        <CppCompile Include="Sources\Forms\Analyze1.cpp">
+        <None Include="Sources\Forms\Analyze1.cpp">
+            <Exclude>True</Exclude>
             <BuildOrder>32</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="Sources\Forms\Analyze2.cpp">
+        </None>
+        <None Include="Sources\Forms\Analyze2.cpp">
+            <Exclude>True</Exclude>
             <BuildOrder>33</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="Sources\Forms\AnalyzeArguments.cpp">
+        </None>
+        <None Include="Sources\Forms\AnalyzeArguments.cpp">
+            <Exclude>True</Exclude>
             <BuildOrder>34</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="Sources\Forms\CXrefs.cpp">
+        </None>
+        <None Include="Sources\Forms\CXrefs.cpp">
+            <Exclude>True</Exclude>
             <BuildOrder>35</BuildOrder>
-        </CppCompile>
+        </None>
         <CppCompile Include="Sources\Forms\EditFieldsDlg.cpp">
             <Form>FEditFieldsDlg_11011981</Form>
             <FormType>dfm</FormType>
@@ -272,18 +277,22 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <DependentOn>Sources\Forms\StringInfo.h</DependentOn>
             <BuildOrder>16</BuildOrder>
         </CppCompile>
-        <CppCompile Include="Sources\Forms\TabNames.cpp">
+        <None Include="Sources\Forms\TabNames.cpp">
+            <Exclude>True</Exclude>
             <BuildOrder>36</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="Sources\Forms\TabRTTIs.cpp">
+        </None>
+        <None Include="Sources\Forms\TabRTTIs.cpp">
+            <Exclude>True</Exclude>
             <BuildOrder>37</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="Sources\Forms\TabStrings.cpp">
+        </None>
+        <None Include="Sources\Forms\TabStrings.cpp">
+            <Exclude>True</Exclude>
             <BuildOrder>38</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="Sources\Forms\TabUnits.cpp">
+        </None>
+        <None Include="Sources\Forms\TabUnits.cpp">
+            <Exclude>True</Exclude>
             <BuildOrder>39</BuildOrder>
-        </CppCompile>
+        </None>
         <CppCompile Include="Sources\Forms\TypeInfo2.cpp">
             <Form>FTypeInfo_11011981</Form>
             <FormType>dfm</FormType>

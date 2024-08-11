@@ -49,7 +49,7 @@ class TFActiveProcesses : public TForm
 
 	typedef BOOL __stdcall (*TEnumProcesses)(HANDLE lpidProcess, DWORD cb, PDWORD cbNeeded);
 	typedef BOOL __stdcall (*TEnumProcessModules)(HANDLE hProcess, HMODULE* lphModule, DWORD cb, PDWORD lpcbNeeded);
-	typedef DWORD __stdcall (*TGetModuleFileNameEx)(HANDLE hProcess, HMODULE hModule, LPTSTR lpFilename, DWORD nSize);
+	typedef DWORD __stdcall (*TGetModuleFileNameEx)(HANDLE hProcess, HMODULE hModule, LPSTR lpFilename, DWORD nSize);
 	typedef BOOL __stdcall (*TGetModuleInformation)(HANDLE hProcess, HMODULE hModule, LPMODULEINFO lpmodinfo, DWORD cb);
 
 	TEnumProcesses lpEnumProcesses;

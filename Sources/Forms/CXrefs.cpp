@@ -59,7 +59,7 @@ void __fastcall TFMain_11011981::lbXrefsDblClick(TObject* Sender)
 		return;
 
 	String item = lb->Items->Strings[lb->ItemIndex];
-	swscanf(item.c_str() + 1, "%lX%2c", &adr, type);
+	swscanf(item.c_str() + 1, L"%lX%2c", &adr, type);
 
 	if(type[1] == 'D') {
 		PInfoRec recN = GetInfoRec(adr);

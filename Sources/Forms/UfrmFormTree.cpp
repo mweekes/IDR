@@ -20,6 +20,7 @@
 extern TResourceInfo* ResInfo;
 extern PInfoRec* Infos;
 extern DWORD CodeBase;
+TIdrDfmFormTree_11011981* IdrDfmFormTree_11011981;
 
 // ---------------------------------------------------------------------------
 void __fastcall TIdrDfmFormTree_11011981::AddEventsToNode(String compName, TTreeNode* dstNode, TList* evList)

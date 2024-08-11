@@ -61,6 +61,8 @@ int __fastcall FloatNameToFloatType(String AName);
 String __fastcall GetArrayElementType(String arrType);
 int __fastcall GetArrayElementTypeSize(String arrType);
 bool __fastcall GetArrayIndexes(String arrType, int ADim, int* LowIdx, int* HighIdx);
+bool __fastcall GetArrayIndexes(AnsiString arrType, int ADim, int* LowIdx, int* HighIdx);
+int __fastcall GetArraySize(AnsiString arrType);
 int __fastcall GetArraySize(String arrType);
 DWORD __fastcall GetChildAdr(DWORD Adr);
 DWORD __fastcall GetClassAdr(const String& AName);

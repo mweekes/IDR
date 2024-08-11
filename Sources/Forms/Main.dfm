@@ -64,7 +64,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 25
         Width = 646
-        Height = 594
+        Height = 579
         Cursor = crIBeam
         Style = lbOwnerDrawFixed
         AutoComplete = False
@@ -290,7 +290,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 25
         Width = 646
-        Height = 594
+        Height = 579
         AutoComplete = False
         Align = alClient
         Anchors = []
@@ -300,6 +300,7 @@ object FMain_11011981: TFMain_11011981
         Font.Height = -12
         Font.Name = 'Courier New'
         Font.Style = []
+        ItemHeight = 15
         MultiSelect = True
         ParentFont = False
         PopupMenu = pmStrings
@@ -378,7 +379,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 25
         Width = 646
-        Height = 594
+        Height = 579
         AutoComplete = False
         Align = alClient
         Anchors = []
@@ -446,7 +447,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 0
         Width = 756
-        Height = 619
+        Height = 604
         Align = alClient
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clWindowText
@@ -480,7 +481,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 0
         Width = 242
-        Height = 619
+        Height = 604
         Style = lbOwnerDrawFixed
         AutoComplete = False
         Align = alClient
@@ -535,7 +536,7 @@ object FMain_11011981: TFMain_11011981
       ImageIndex = 3
       object Splitter1: TSplitter
         Left = 0
-        Top = 445
+        Top = 430
         Width = 242
         Height = 4
         Cursor = crVSplit
@@ -543,6 +544,7 @@ object FMain_11011981: TFMain_11011981
         Color = clGray
         MinSize = 3
         ParentColor = False
+        ExplicitTop = 445
       end
       object Panel2: TPanel
         Left = 0
@@ -571,7 +573,7 @@ object FMain_11011981: TFMain_11011981
         Left = 0
         Top = 40
         Width = 242
-        Height = 405
+        Height = 390
         AutoComplete = False
         Align = alClient
         Color = clWhite
@@ -597,7 +599,6 @@ object FMain_11011981: TFMain_11011981
         Height = 170
         Align = alBottom
         TabOrder = 2
-        ExplicitTop = 449
         object lbAliases: TListBox
           Left = 1
           Top = 1

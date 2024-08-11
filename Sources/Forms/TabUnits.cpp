@@ -1,5 +1,5 @@
 
-extern WideString __fastcall UnicodeEncode(String Str, int CodePage);
+extern WideString __fastcall UnicodeEncode(AnsiString Str, int CodePage);
 
 // ---------------------------------------------------------------------------
 // ***************************************************************************
@@ -83,7 +83,7 @@ void __fastcall TFMain_11011981::ShowUnits(bool showUnk)
 	DWORD selAdr = 0;
 	if(oldItemIdx != -1) {
 		String item = lbUnits->Items->Strings[oldItemIdx];
-		swscanf(item.c_str() + 1, "%lX", &selAdr);
+		swscanf(item.c_str() + 1, L"%lX", &selAdr);
 	}
 	int oldTopIdx = lbUnits->TopIndex;
 
@@ -188,7 +188,7 @@ void __fastcall TFMain_11011981::lbUnitsDblClick(TObject* Sender)
 	DWORD adr;
 
 	String item = lbUnits->Items->Strings[lbUnits->ItemIndex];
-	swscanf(item.c_str() + 1, "%lX", &adr);
+	swscanf(item.c_str() + 1, L"%lX", &adr);
 	PUnitRec recU = GetUnit(adr);
 
 	if(!CurUnitAdr || adr != CurUnitAdr) {
@@ -211,7 +211,7 @@ void __fastcall TFMain_11011981::lbUnitsKeyDown(TObject* Sender, WORD& Key, TShi
 // ---------------------------------------------------------------------------
 void __fastcall TFMain_11011981::lbUnitsDrawItem(TWinControl* Control, int Index, TRect& Rect, TOwnerDrawState State)
 {
-	char *s, *pos;
+	wchar_t *s, *pos;
 	int flags, len;
 	TColor _color;
 	TListBox* lb;
@@ -235,7 +235,8 @@ void __fastcall TFMain_11011981::lbUnitsDrawItem(TWinControl* Control, int Index
 
 		s = text.c_str();
 		//*XXXXXXXX #XXX XX NAME
-		pos = strrchr(s, ' ');
+		//pos = strrchr(s, ' ');
+		pos = wcschr(s, ' ');
 		len = pos - s;
 		str1 = text.SubString(2, len - 1);
 		str2 = text.SubString(len + 1, text.Length() - len);
@@ -308,7 +309,7 @@ void __fastcall TFMain_11011981::miRenameUnitClick(TObject* Sender)
 
 	String item = lbUnits->Items->Strings[lbUnits->ItemIndex];
 	DWORD adr;
-	swscanf(item.c_str() + 1, "%lX", &adr);
+	swscanf(item.c_str() + 1, L"%lX", &adr);
 	PUnitRec recU = GetUnit(adr);
 
 	String text = "";
@@ -644,9 +645,9 @@ void __fastcall TFMain_11011981::lbUnitItemsDblClick(TObject* Sender)
 	String item = lbUnitItems->Items->Strings[lbUnitItems->ItemIndex];
 	//Xrefs?
 	if(item[11] == '<' || item[11] == '?')
-		swscanf(item.c_str() + 1, "%lX%s%s", &adr, tkName, typeName);
+		swscanf(item.c_str() + 1, L"%lX%s%s", &adr, tkName, typeName);
 	else
-		swscanf(item.c_str() + 1, "%lX%d%s%s", &adr, &refCnt, tkName, typeName);
+		swscanf(item.c_str() + 1, L"%lX%d%s%s", &adr, &refCnt, tkName, typeName);
 	String name = String(tkName);
 	pos = Adr2Pos(adr);
 
@@ -915,9 +916,9 @@ void __fastcall TFMain_11011981::miEditFunctionIClick(TObject* Sender)
 	String item = lbUnitItems->Items->Strings[lbUnitItems->ItemIndex];
 	//Xrefs?
 	if(item[11] == '<' || item[11] == '?')
-		swscanf(item.c_str() + 1, "%lX%s", &adr, tkName);
+		swscanf(item.c_str() + 1, L"%lX%s", &adr, tkName);
 	else
-		swscanf(item.c_str() + 1, "%lX%d%s", &adr, &refCnt, tkName);
+		swscanf(item.c_str() + 1, L"%lX%d%s", &adr, &refCnt, tkName);
 
 	String name = String(tkName);
 

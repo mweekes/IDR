@@ -91,7 +91,7 @@ void __fastcall TFMain_11011981::lbNamesClick(TObject* Sender)
 	if(lbNames->ItemIndex >= 0) {
 		DWORD adr;
 		String line = lbNames->Items->Strings[lbNames->ItemIndex];
-		sscanf(line.c_str() + 1, "%lX", &adr);
+		swscanf(line.c_str() + 1, L"%lX", &adr);
 		ShowNameXrefs(adr, -1);
 	}
 }

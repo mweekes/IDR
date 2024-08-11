@@ -36,12 +36,13 @@
 #include "TypeInfo2.h"
 #include <ComCtrls.hpp>
 #include <System.IniFiles.hpp>
+#include <System.IOUtils.hpp>
 #include <Vcl.Clipbrd.hpp>
-//#include <Chart.hpp>
 #include <IniFiles.hpp>
 #include <Outline.hpp>
 #include <Registry.hpp>
 #include <Tabnotbk.hpp>
+//#include <filesystem.h>
 #include <assert.h>
 /*
 //----Highlighting-----------------------------------------------------------
@@ -558,8 +559,8 @@ void __fastcall TFMain_11011981::FindExports()
 // ---------------------------------------------------------------------------
 void __fastcall TFMain_11011981::FindImports()
 {
-	wchar_t *b;
-	wchar_t *e;
+	wchar_t* b;
+	wchar_t* e;
 	int pos;
 	String name;
 
@@ -2682,7 +2683,7 @@ DWORD __fastcall TFMain_11011981::EvaluateInitTable(BYTE* Data, DWORD Size, DWOR
 int __fastcall TFMain_11011981::GetUnits(String dprName)
 {
 	BYTE len;
-	char *b, *e;
+	wchar_t *b, *e;
 	int n, i, no, unitsPos = 0, start, spos, pos, iniProcSize, finProcSize, unitsNum = 0;
 	int typesNum, units1Num, typesTable, units1Table; // For D2010
 	DWORD initTable, iniAdr, finAdr, unitsTabEnd, toAdr;
@@ -2877,9 +2878,11 @@ int __fastcall TFMain_11011981::GetUnits(String dprName)
 			recN->procInfo->procSize = finProcSize;
 			// import?
 			if(IsFlagSet(cfImport, pos)) {
-				b = strchr(recN->GetName().c_str(), '@');
+				//b = strchr(recN->GetName().c_str(), '@');
+				b = wcschr(recN->GetName().c_str(), L'@');
 				if(b) {
-					e = strchr(b + 1, '@');
+					//e = strchr(b + 1, '@');
+					e = wcschr(b + 1, L'@');
 					if(e)
 						SetUnitName(recU, String(b + 1, e - b - 1));
 				}
@@ -4599,16 +4602,37 @@ void __fastcall TFMain_11011981::FormCreate(TObject* Sender)
 	}
 
 	AppDir = ExtractFilePath(Application->ExeName);
+    AppDir = TPath::GetFullPath(AppDir);
 	if(AppDir[AppDir.Length()] != '\\')
 		AppDir += "\\";
 	Application->HelpFile = AppDir + "idr.chm";
 	IniFileRead();
 
+	//std::filesystem::canonical
+	//std::filesystem::path p = std::filesystem::path(AppDir);
+    String p = String(AppDir);
+
 #ifdef _DEBUG
+	//Application->MessageBox(AppDir.c_str(), L"AppDir", MB_YESNOCANCEL);
 	BinsDir = AppDir + "..\\..\\..\\Bins\\";
+	//TPath::GetFullPath(BinsDir);
+
+	//p += "..\\..\\..\\Bins\\";
+	//p = std::filesystem::canonical(p);
+	//p = ExtractFilePath(p);
+	//p = ExtractFileDir(p);
+	//p = TPath::GetFullPath(p);
+
+	//BinsDir = p;
+	//Application->MessageBox(p.c_str(), L"BinsDir", MB_YESNOCANCEL);
 #else
 	BinsDir = AppDir + "Bins\\";
 #endif
+	BinsDir = TPath::GetFullPath(BinsDir);
+	if(BinsDir[BinsDir.Length()] != '\\')
+		BinsDir += "\\";
+	Application->MessageBox(BinsDir.c_str(), L"BinsDir", MB_YESNOCANCEL);
+
 
 	miDelphi2->Enabled = FileExists(BinsDir + "kb2.bin");
 	miDelphi3->Enabled = FileExists(BinsDir + "kb3.bin");
@@ -4742,7 +4766,7 @@ String __fastcall GetFilenameFromLink(String LinkName)
 	// Find Object shortcut points to
 	pshl->Resolve(0, SLR_ANY_MATCH | SLR_NO_UI);
 	// Get Object name
-	char* targetName = new char[MAX_PATH];
+	wchar_t* targetName = new wchar_t[MAX_PATH];
 	pshl->GetPath(targetName, MAX_PATH, &wfd, 0);
 	result = String(targetName);
 	delete[] targetName;
@@ -5015,387 +5039,167 @@ void __fastcall TFMain_11011981::ShowCode(DWORD fromAdr, int SelectedIdx, int Xr
               return;
       }
       */
-	if(!AnalyzeThread) // Clear all Items (used in highlighting) {
+	if(!AnalyzeThread) { // Clear all Items (used in highlighting) {
 		// AnalyzeProc1(fromAdr, 0, 0, 0, false);//!!!
 		AnalyzeProc2(fromAdr, false, false);
-}
-
-CurProcAdr = fromAdr;
-CurProcSize = 0;
-lbCode->Clear();
-lbCode->Items->BeginUpdate();
-
-recN = GetInfoRec(fromAdr);
-
-int outRows = MAX_DISASSEMBLE;
-if(IsFlagSet(cfImport, fromPos))
-	outRows = 2;
-
-line = " ";
-if(fromAdr == EP) {
-	line += "EntryPoint";
-} else {
-	String moduleName = "";
-	String procName = "";
-
-	PUnitRec recU = GetUnit(fromAdr);
-	if(recU) {
-		moduleName = GetUnitName(recU);
-		if(fromAdr == recU->iniadr)
-			procName = "Initialization";
-		else if(fromAdr == recU->finadr)
-			procName = "Finalization";
 	}
-	if(recN && procName == "")
-		procName = recN->MakeMapName(fromAdr);
 
-	if(moduleName != "")
-		line += moduleName + "." + procName;
-	else
-		line += procName;
-}
-lProcName->Caption = line;
-lbCode->Items->Add(line);
-row++;
+	CurProcAdr = fromAdr;
+	CurProcSize = 0;
+	lbCode->Clear();
+	lbCode->Items->BeginUpdate();
 
-_procSize = GetProcSize(fromAdr);
-curPos = fromPos;
-curAdr = fromAdr;
+	recN = GetInfoRec(fromAdr);
 
-while(row < outRows) {
-	// End of procedure
-	if(curAdr != fromAdr && _procSize && curAdr - fromAdr >= _procSize)
-		break;
-	// Loc?
-	flags = ' ';
-	if(curAdr != CurProcAdr && IsFlagSet(cfLoc, curPos))
-		flags |= 1;
-	if(IsFlagSet(cfFrame | cfSkip, curPos))
-		flags |= 2;
-	if(IsFlagSet(cfLoop, curPos))
-		flags |= 4;
+	int outRows = MAX_DISASSEMBLE;
+	if(IsFlagSet(cfImport, fromPos))
+		outRows = 2;
 
-	// If exception table, output it
-	if(IsFlagSet(cfETable, curPos)) {
-		// dd num
-		num = *((int*)(Code + curPos));
-		wid = AddAsmLine(curAdr, "dd          " + String(num), flags);
-		row++;
-		if(wid > maxwid)
-			maxwid = wid;
+	line = " ";
+	if(fromAdr == EP) {
+		line += "EntryPoint";
+	} else {
+		String moduleName = "";
+		String procName = "";
 
-		curPos += 4;
-		curAdr += 4;
+		PUnitRec recU = GetUnit(fromAdr);
+		if(recU) {
+			moduleName = GetUnitName(recU);
+			if(fromAdr == recU->iniadr)
+				procName = "Initialization";
+			else if(fromAdr == recU->finadr)
+				procName = "Finalization";
+		}
+		if(recN && procName == "")
+			procName = recN->MakeMapName(fromAdr);
 
-		for(int k = 0; k < num; k++) {
-			// dd offset ExceptionInfo
-			Adr = *((DWORD*)(Code + curPos));
-			line1 = "dd          " + Val2Str8(Adr);
-			// Name of Exception
-			if(IsValidCodeAdr(Adr)) {
-				recN = GetInfoRec(Adr);
-				if(recN && recN->HasName())
-					line1 += ";" + recN->GetName();
-			}
-			wid = AddAsmLine(curAdr, line1, flags);
-			row++;
-			if(wid > maxwid)
-				maxwid = wid;
+		if(moduleName != "")
+			line += moduleName + "." + procName;
+		else
+			line += procName;
+	}
+	lProcName->Caption = line;
+	lbCode->Items->Add(line);
+	row++;
 
-			// dd offset ExceptionProc
-			curPos += 4;
-			curAdr += 4;
-			Adr = *((DWORD*)(Code + curPos));
-			wid = AddAsmLine(curAdr, "dd          " + Val2Str8(Adr), flags);
+	_procSize = GetProcSize(fromAdr);
+	curPos = fromPos;
+	curAdr = fromAdr;
+
+	while(row < outRows) {
+		// End of procedure
+		if(curAdr != fromAdr && _procSize && curAdr - fromAdr >= _procSize)
+			break;
+		// Loc?
+		flags = ' ';
+		if(curAdr != CurProcAdr && IsFlagSet(cfLoc, curPos))
+			flags |= 1;
+		if(IsFlagSet(cfFrame | cfSkip, curPos))
+			flags |= 2;
+		if(IsFlagSet(cfLoop, curPos))
+			flags |= 4;
+
+		// If exception table, output it
+		if(IsFlagSet(cfETable, curPos)) {
+			// dd num
+			num = *((int*)(Code + curPos));
+			wid = AddAsmLine(curAdr, "dd          " + String(num), flags);
 			row++;
 			if(wid > maxwid)
 				maxwid = wid;
 
 			curPos += 4;
 			curAdr += 4;
-		}
-		continue;
-	}
 
-	BYTE b1 = Code[curPos];
-	BYTE b2 = Code[curPos + 1];
-	if(!b1 && !b2 && !lastAdr)
-		break;
-
-	instrLen = Disasm.Disassemble(Code + curPos, (__int64)curAdr, &DisInfo, disLine);
-	if(!instrLen) {
-		wid = AddAsmLine(curAdr, "???", 0x22);
-		row++;
-		if(wid > maxwid)
-			maxwid = wid;
-		curPos++;
-		curAdr++;
-		continue;
-	}
-	op = Disasm.GetOp(DisInfo.Mnem);
-
-	// Check inside instruction Fixup or ThreadVar
-	bool NameInside = false;
-	DWORD NameInsideAdr;
-	for(int k = 1; k < instrLen; k++) {
-		if(Infos[curPos + k]) {
-			NameInside = true;
-			NameInsideAdr = curAdr + k;
-			break;
-		}
-	}
-
-	line = String(disLine);
-
-	if(curAdr >= lastAdr)
-		lastAdr = 0;
-
-	// Proc end
-	if(DisInfo.Ret && (!lastAdr || curAdr == lastAdr)) {
-		wid = AddAsmLine(curAdr, line, flags);
-		row++;
-		if(wid > maxwid)
-			maxwid = wid;
-		break;
-	}
-
-	if(op == OP_MOV)
-		lastMovAdr = DisInfo.Offset;
-
-	if(b1 == 0xEB || // short relative abs jmp or cond jmp
-	   (b1 >= 0x70 && b1 <= 0x7F) || (b1 == 0xF && b2 >= 0x80 && b2 <= 0x8F)) {
-		Adr = DisInfo.Immediate;
-		if(IsValidCodeAdr(Adr)) {
-			if(op == OP_JMP) {
-				_ap = Adr2Pos(Adr);
-				recN = GetInfoRec(Adr);
-				if(recN && IsFlagSet(cfProcStart, _ap) && recN->HasName()) {
-					line = "jmp         " + recN->GetName();
+			for(int k = 0; k < num; k++) {
+				// dd offset ExceptionInfo
+				Adr = *((DWORD*)(Code + curPos));
+				line1 = "dd          " + Val2Str8(Adr);
+				// Name of Exception
+				if(IsValidCodeAdr(Adr)) {
+					recN = GetInfoRec(Adr);
+					if(recN && recN->HasName())
+						line1 += ";" + recN->GetName();
 				}
-			}
-			flags |= 8;
-			if(Adr >= fromAdr && Adr > lastAdr)
-				lastAdr = Adr;
-		}
-		wid = AddAsmLine(curAdr, line, flags);
-		row++;
-		if(wid > maxwid)
-			maxwid = wid;
-		curPos += instrLen;
-		curAdr += instrLen;
-		continue;
-	}
-
-	if(b1 == 0xE9) // relative abs jmp or cond jmp
-	{
-		Adr = DisInfo.Immediate;
-		if(IsValidCodeAdr(Adr)) {
-			_ap = Adr2Pos(Adr);
-			recN = GetInfoRec(Adr);
-			if(recN && IsFlagSet(cfProcStart, _ap) && recN->HasName()) {
-				line = "jmp         " + recN->GetName();
-			}
-			flags |= 8;
-			if(!recN && Adr >= fromAdr && Adr > lastAdr)
-				lastAdr = Adr;
-		}
-		wid = AddAsmLine(curAdr, line, flags);
-		row++;
-		if(wid > maxwid)
-			maxwid = wid;
-		curPos += instrLen;
-		curAdr += instrLen;
-		continue;
-	}
-
-	if(DisInfo.Call) // call sub_XXXXXXXX
-	{
-		Adr = DisInfo.Immediate;
-		if(IsValidCodeAdr(Adr)) {
-			recN = GetInfoRec(Adr);
-			if(recN && recN->HasName()) {
-				line = "call        " + recN->GetName();
-				// Found @Halt0 - exit
-				if(recN->SameName("@Halt0") && fromAdr == EP && !lastAdr) {
-					wid = AddAsmLine(curAdr, line, flags);
-					row++;
-					if(wid > maxwid)
-						maxwid = wid;
-					break;
-				}
-			}
-		}
-		recN = GetInfoRec(curAdr);
-		if(recN && recN->picode)
-			line += ";" + MakeComment(recN->picode);
-		wid = AddAsmLine(curAdr, line, flags);
-		row++;
-		if(wid > maxwid)
-			maxwid = wid;
-		curPos += instrLen;
-		curAdr += instrLen;
-		continue;
-	}
-
-	if(b1 == 0xFF && (b2 & 0x38) == 0x20 && DisInfo.OpType[0] == otMEM && IsValidImageAdr(DisInfo.Offset))
-	// near absolute indirect jmp (Case)
-	{
-		wid = AddAsmLine(curAdr, line, flags);
-		row++;
-		if(wid > maxwid)
-			maxwid = wid;
-		if(!IsValidCodeAdr(DisInfo.Offset))
-			break;
-		/*
-                    //First instruction
-                    if (curAdr == fromAdr) break;
-                    */
-		DWORD cTblAdr = 0, jTblAdr = 0;
-
-		Pos = curPos + instrLen;
-		Adr = curAdr + instrLen;
-		// Table address - last 4 bytes of instruction
-		jTblAdr = *((DWORD*)(Code + Pos - 4));
-		// Analyze address range to find table cTbl
-		if(Adr <= lastMovAdr && lastMovAdr < jTblAdr)
-			cTblAdr = lastMovAdr;
-		// If exist cTblAdr, skip this table
-		BYTE CTab[256];
-		if(cTblAdr) {
-			int CNum = jTblAdr - cTblAdr;
-			for(int k = 0; k < CNum; k++) {
-				BYTE db = Code[Pos];
-				CTab[k] = db;
-				wid = AddAsmLine(Adr, "db          " + AnsiString(db), 0x22);
+				wid = AddAsmLine(curAdr, line1, flags);
 				row++;
 				if(wid > maxwid)
 					maxwid = wid;
-				Pos++;
-				Adr++;
+
+				// dd offset ExceptionProc
+				curPos += 4;
+				curAdr += 4;
+				Adr = *((DWORD*)(Code + curPos));
+				wid = AddAsmLine(curAdr, "dd          " + Val2Str8(Adr), flags);
+				row++;
+				if(wid > maxwid)
+					maxwid = wid;
+
+				curPos += 4;
+				curAdr += 4;
 			}
+			continue;
 		}
-		// Check transitions by negative register values (in Delphi 2009)
-		// bool neg = false;
-		// Adr1 = *((DWORD*)(Code + Pos - 4));
-		// if (IsValidCodeAdr(Adr1) && IsFlagSet(cfLoc, Adr2Pos(Adr1))) neg = true;
 
-		for(int k = 0; k < 4096; k++) {
-			// Loc - end of table
-			if(IsFlagSet(cfLoc, Pos))
-				break;
+		BYTE b1 = Code[curPos];
+		BYTE b2 = Code[curPos + 1];
+		if(!b1 && !b2 && !lastAdr)
+			break;
 
-			Adr1 = *((DWORD*)(Code + Pos));
-			// Validate Adr1
-			if(!IsValidCodeAdr(Adr1) || Adr1 < fromAdr)
-				break;
-
-			// Add row to assembler listing
-			wid = AddAsmLine(Adr, "dd          " + Val2Str8(Adr1), 0x22);
+		instrLen = Disasm.Disassemble(Code + curPos, (__int64)curAdr, &DisInfo, disLine);
+		if(!instrLen) {
+			wid = AddAsmLine(curAdr, "???", 0x22);
 			row++;
 			if(wid > maxwid)
 				maxwid = wid;
-			// Set cfLoc
-			SetFlag(cfLoc, Adr2Pos(Adr1));
-
-			Pos += 4;
-			Adr += 4;
-			if(Adr1 > lastAdr)
-				lastAdr = Adr1;
+			curPos++;
+			curAdr++;
+			continue;
 		}
-		if(Adr > lastAdr)
-			lastAdr = Adr;
-		curPos = Pos;
-		curAdr = Adr;
-		continue;
-	}
-	// ----------------------------------
-	// PosTry: xor reg, reg
-	//		push ebp
-	//		push offset @1
-	//		push fs:[reg]
-	//		mov fs:[reg], esp
-	//		...
-	//@2:	 ...
-	// At @1 various variants:
-	// ----------------------------------
-	//@1:	 jmp @HandleFinally
-	//		jmp @2
-	// ----------------------------------
-	//@1:	 jmp @HandleAnyException
-	//		call DoneExcept
-	// ----------------------------------
-	//@1:	 jmp HandleOnException
-	//		dd num
-	//Äàëåå òàáëèöà èç num çàïèñåé âèäà
-	//		dd offset ExceptionInfo
-	//		dd offset ExceptionProc
-	// ----------------------------------
-	if(b1 == 0x68) // try block	(push loc_TryBeg)
-	{
-		DWORD NPos = curPos + instrLen;
-		// check that next instruction is push fs:[reg] or retn
-		if((Code[NPos] == 0x64 && Code[NPos + 1] == 0xFF && ((Code[NPos + 2] >= 0x30 && Code[NPos + 2] <= 0x37) || Code[NPos + 2] == 0x75)) ||
-		   Code[NPos] == 0xC3) {
-			Adr = DisInfo.Immediate; // Adr=@1
+		op = Disasm.GetOp(DisInfo.Mnem);
+
+		// Check inside instruction Fixup or ThreadVar
+		bool NameInside = false;
+		DWORD NameInsideAdr;
+		for(int k = 1; k < instrLen; k++) {
+			if(Infos[curPos + k]) {
+				NameInside = true;
+				NameInsideAdr = curAdr + k;
+				break;
+			}
+		}
+
+		line = String(disLine);
+
+		if(curAdr >= lastAdr)
+			lastAdr = 0;
+
+		// Proc end
+		if(DisInfo.Ret && (!lastAdr || curAdr == lastAdr)) {
+			wid = AddAsmLine(curAdr, line, flags);
+			row++;
+			if(wid > maxwid)
+				maxwid = wid;
+			break;
+		}
+
+		if(op == OP_MOV)
+			lastMovAdr = DisInfo.Offset;
+
+		if(b1 == 0xEB || // short relative abs jmp or cond jmp
+		   (b1 >= 0x70 && b1 <= 0x7F) || (b1 == 0xF && b2 >= 0x80 && b2 <= 0x8F)) {
+			Adr = DisInfo.Immediate;
 			if(IsValidCodeAdr(Adr)) {
-				if(Adr > lastAdr)
-					lastAdr = Adr;
-				Pos = Adr2Pos(Adr);
-				if(Pos >= 0) {
-					if(Code[Pos] == 0xE9) // jmp Handle...
-					{
-						// Disassemble jmp
-						instrLen1 = Disasm.Disassemble(Code + Pos, (__int64)Adr, &DisInfo, 0);
-
-						recN = GetInfoRec(DisInfo.Immediate);
-						if(recN) {
-							if(recN->SameName("@HandleFinally")) {
-								// jmp HandleFinally
-								Pos += instrLen1;
-								Adr += instrLen1;
-								// jmp @2
-								instrLen2 = Disasm.Disassemble(Code + Pos, (__int64)Adr, &DisInfo, 0);
-								Adr += instrLen2;
-								if(Adr > lastAdr)
-									lastAdr = Adr;
-								/*
-								// @2
-								Adr1 = DisInfo.Immediate - 4;
-								Adr = *((DWORD*)(Code + Adr2Pos(Adr1)));
-								if (IsValidCodeAdr(Adr) && Adr > lastAdr)
-									lastAdr = Adr;
-								*/
-							} else if(recN->SameName("@HandleAnyException") || recN->SameName("@HandleAutoException")) {
-								// jmp HandleAnyException
-								Pos += instrLen1;
-								Adr += instrLen1;
-								// call DoneExcept
-								instrLen2 = Disasm.Disassemble(Code + Pos, (__int64)Adr, 0, 0);
-								Adr += instrLen2;
-								if(Adr > lastAdr)
-									lastAdr = Adr;
-							} else if(recN->SameName("@HandleOnException")) {
-								// jmp HandleOnException
-								Pos += instrLen1;
-								Adr += instrLen1;
-								// Set flag cfETable to correct output data
-								SetFlag(cfETable, Pos);
-								// dd num
-								num = *((int*)(Code + Pos));
-								Pos += 4;
-								if(Adr + 4 + 8 * num > lastAdr)
-									lastAdr = Adr + 4 + 8 * num;
-
-								for(int k = 0; k < num; k++) {
-									// dd offset ExceptionInfo
-									Pos += 4;
-									// dd offset ExceptionProc
-									Pos += 4;
-								}
-							}
-						}
+				if(op == OP_JMP) {
+					_ap = Adr2Pos(Adr);
+					recN = GetInfoRec(Adr);
+					if(recN && IsFlagSet(cfProcStart, _ap) && recN->HasName()) {
+						line = "jmp         " + recN->GetName();
 					}
 				}
+				flags |= 8;
+				if(Adr >= fromAdr && Adr > lastAdr)
+					lastAdr = Adr;
 			}
 			wid = AddAsmLine(curAdr, line, flags);
 			row++;
@@ -5405,134 +5209,354 @@ while(row < outRows) {
 			curAdr += instrLen;
 			continue;
 		}
-	}
 
-	// Name inside instruction (Fixip, ThreadVar)
-	String namei = "", comment = "", name, pname, type, ptype;
-	if(NameInside) {
-		recN = GetInfoRec(NameInsideAdr);
-		if(recN && recN->HasName()) {
-			namei += recN->GetName();
-			if(recN->type != "")
-				namei += ":" + recN->type;
-		}
-	}
-	// comment
-	recN = GetInfoRec(curAdr);
-	if(recN && recN->picode)
-		comment = MakeComment(recN->picode);
-
-	DWORD targetAdr = 0;
-	if(IsValidImageAdr(DisInfo.Immediate)) {
-		if(!IsValidImageAdr(DisInfo.Offset))
-			targetAdr = DisInfo.Immediate;
-	} else if(IsValidImageAdr(DisInfo.Offset))
-		targetAdr = DisInfo.Offset;
-
-	if(targetAdr) {
-		name = pname = type = ptype = "";
-		_pos = Adr2Pos(targetAdr);
-		if(_pos >= 0) {
-			recN = GetInfoRec(targetAdr);
-			if(recN) {
-				if(recN->kind == ikResString) {
-					name = recN->GetName() + ":PResStringRec";
-				} else {
-					if(recN->HasName()) {
-						name = recN->GetName();
-						if(recN->type != "")
-							type = recN->type;
-					} else if(IsFlagSet(cfProcStart, _pos))
-						name = GetDefaultProcName(targetAdr);
-				}
-			}
-			// For Delphi2 pointers to VMT are distinct
-			else if(DelphiVersion == 2) {
-				recN = GetInfoRec(targetAdr + cVmtSelfPtr);
-				if(recN && recN->kind == ikVMT && recN->HasName()) {
-					name = recN->GetName();
-				}
-			}
-			Adr = *((DWORD*)(Code + _pos));
-			if(IsValidImageAdr(Adr)) {
+		if(b1 == 0xE9) // relative abs jmp or cond jmp
+		{
+			Adr = DisInfo.Immediate;
+			if(IsValidCodeAdr(Adr)) {
+				_ap = Adr2Pos(Adr);
 				recN = GetInfoRec(Adr);
-				if(recN) {
-					if(recN->HasName()) {
-						pname = recN->GetName();
-						ptype = recN->type;
-					} else if(IsFlagSet(cfProcStart, _pos))
-						pname = GetDefaultProcName(Adr);
+				if(recN && IsFlagSet(cfProcStart, _ap) && recN->HasName()) {
+					line = "jmp         " + recN->GetName();
+				}
+				flags |= 8;
+				if(!recN && Adr >= fromAdr && Adr > lastAdr)
+					lastAdr = Adr;
+			}
+			wid = AddAsmLine(curAdr, line, flags);
+			row++;
+			if(wid > maxwid)
+				maxwid = wid;
+			curPos += instrLen;
+			curAdr += instrLen;
+			continue;
+		}
+
+		if(DisInfo.Call) // call sub_XXXXXXXX
+		{
+			Adr = DisInfo.Immediate;
+			if(IsValidCodeAdr(Adr)) {
+				recN = GetInfoRec(Adr);
+				if(recN && recN->HasName()) {
+					line = "call        " + recN->GetName();
+					// Found @Halt0 - exit
+					if(recN->SameName("@Halt0") && fromAdr == EP && !lastAdr) {
+						wid = AddAsmLine(curAdr, line, flags);
+						row++;
+						if(wid > maxwid)
+							maxwid = wid;
+						break;
+					}
 				}
 			}
-		} else {
-			_idx = BSSInfos->IndexOf(Val2Str8(targetAdr));
-			if(_idx != -1) {
-				recN = (PInfoRec)BSSInfos->Objects[_idx];
-				name = recN->GetName();
-				type = recN->type;
+			recN = GetInfoRec(curAdr);
+			if(recN && recN->picode)
+				line += ";" + MakeComment(recN->picode);
+			wid = AddAsmLine(curAdr, line, flags);
+			row++;
+			if(wid > maxwid)
+				maxwid = wid;
+			curPos += instrLen;
+			curAdr += instrLen;
+			continue;
+		}
+
+		if(b1 == 0xFF && (b2 & 0x38) == 0x20 && DisInfo.OpType[0] == otMEM && IsValidImageAdr(DisInfo.Offset))
+		// near absolute indirect jmp (Case)
+		{
+			wid = AddAsmLine(curAdr, line, flags);
+			row++;
+			if(wid > maxwid)
+				maxwid = wid;
+			if(!IsValidCodeAdr(DisInfo.Offset))
+				break;
+			/*
+                    //First instruction
+                    if (curAdr == fromAdr) break;
+                    */
+			DWORD cTblAdr = 0, jTblAdr = 0;
+
+			Pos = curPos + instrLen;
+			Adr = curAdr + instrLen;
+			// Table address - last 4 bytes of instruction
+			jTblAdr = *((DWORD*)(Code + Pos - 4));
+			// Analyze address range to find table cTbl
+			if(Adr <= lastMovAdr && lastMovAdr < jTblAdr)
+				cTblAdr = lastMovAdr;
+			// If exist cTblAdr, skip this table
+			BYTE CTab[256];
+			if(cTblAdr) {
+				int CNum = jTblAdr - cTblAdr;
+				for(int k = 0; k < CNum; k++) {
+					BYTE db = Code[Pos];
+					CTab[k] = db;
+					wid = AddAsmLine(Adr, "db          " + AnsiString(db), 0x22);
+					row++;
+					if(wid > maxwid)
+						maxwid = wid;
+					Pos++;
+					Adr++;
+				}
+			}
+			// Check transitions by negative register values (in Delphi 2009)
+			// bool neg = false;
+			// Adr1 = *((DWORD*)(Code + Pos - 4));
+			// if (IsValidCodeAdr(Adr1) && IsFlagSet(cfLoc, Adr2Pos(Adr1))) neg = true;
+
+			for(int k = 0; k < 4096; k++) {
+				// Loc - end of table
+				if(IsFlagSet(cfLoc, Pos))
+					break;
+
+				Adr1 = *((DWORD*)(Code + Pos));
+				// Validate Adr1
+				if(!IsValidCodeAdr(Adr1) || Adr1 < fromAdr)
+					break;
+
+				// Add row to assembler listing
+				wid = AddAsmLine(Adr, "dd          " + Val2Str8(Adr1), 0x22);
+				row++;
+				if(wid > maxwid)
+					maxwid = wid;
+				// Set cfLoc
+				SetFlag(cfLoc, Adr2Pos(Adr1));
+
+				Pos += 4;
+				Adr += 4;
+				if(Adr1 > lastAdr)
+					lastAdr = Adr1;
+			}
+			if(Adr > lastAdr)
+				lastAdr = Adr;
+			curPos = Pos;
+			curAdr = Adr;
+			continue;
+		}
+		// ----------------------------------
+		// PosTry: xor reg, reg
+		//		push ebp
+		//		push offset @1
+		//		push fs:[reg]
+		//		mov fs:[reg], esp
+		//		...
+		//@2:	 ...
+		// At @1 various variants:
+		// ----------------------------------
+		//@1:	 jmp @HandleFinally
+		//		jmp @2
+		// ----------------------------------
+		//@1:	 jmp @HandleAnyException
+		//		call DoneExcept
+		// ----------------------------------
+		//@1:	 jmp HandleOnException
+		//		dd num
+		//Äàëåå òàáëèöà èç num çàïèñåé âèäà
+		//		dd offset ExceptionInfo
+		//		dd offset ExceptionProc
+		// ----------------------------------
+		if(b1 == 0x68) // try block	(push loc_TryBeg)
+		{
+			DWORD NPos = curPos + instrLen;
+			// check that next instruction is push fs:[reg] or retn
+			if((Code[NPos] == 0x64 && Code[NPos + 1] == 0xFF && ((Code[NPos + 2] >= 0x30 && Code[NPos + 2] <= 0x37) || Code[NPos + 2] == 0x75)) ||
+			   Code[NPos] == 0xC3) {
+				Adr = DisInfo.Immediate; // Adr=@1
+				if(IsValidCodeAdr(Adr)) {
+					if(Adr > lastAdr)
+						lastAdr = Adr;
+					Pos = Adr2Pos(Adr);
+					if(Pos >= 0) {
+						if(Code[Pos] == 0xE9) // jmp Handle...
+						{
+							// Disassemble jmp
+							instrLen1 = Disasm.Disassemble(Code + Pos, (__int64)Adr, &DisInfo, 0);
+
+							recN = GetInfoRec(DisInfo.Immediate);
+							if(recN) {
+								if(recN->SameName("@HandleFinally")) {
+									// jmp HandleFinally
+									Pos += instrLen1;
+									Adr += instrLen1;
+									// jmp @2
+									instrLen2 = Disasm.Disassemble(Code + Pos, (__int64)Adr, &DisInfo, 0);
+									Adr += instrLen2;
+									if(Adr > lastAdr)
+										lastAdr = Adr;
+									/*
+								// @2
+								Adr1 = DisInfo.Immediate - 4;
+								Adr = *((DWORD*)(Code + Adr2Pos(Adr1)));
+								if (IsValidCodeAdr(Adr) && Adr > lastAdr)
+									lastAdr = Adr;
+								*/
+								} else if(recN->SameName("@HandleAnyException") || recN->SameName("@HandleAutoException")) {
+									// jmp HandleAnyException
+									Pos += instrLen1;
+									Adr += instrLen1;
+									// call DoneExcept
+									instrLen2 = Disasm.Disassemble(Code + Pos, (__int64)Adr, 0, 0);
+									Adr += instrLen2;
+									if(Adr > lastAdr)
+										lastAdr = Adr;
+								} else if(recN->SameName("@HandleOnException")) {
+									// jmp HandleOnException
+									Pos += instrLen1;
+									Adr += instrLen1;
+									// Set flag cfETable to correct output data
+									SetFlag(cfETable, Pos);
+									// dd num
+									num = *((int*)(Code + Pos));
+									Pos += 4;
+									if(Adr + 4 + 8 * num > lastAdr)
+										lastAdr = Adr + 4 + 8 * num;
+
+									for(int k = 0; k < num; k++) {
+										// dd offset ExceptionInfo
+										Pos += 4;
+										// dd offset ExceptionProc
+										Pos += 4;
+									}
+								}
+							}
+						}
+					}
+				}
+				wid = AddAsmLine(curAdr, line, flags);
+				row++;
+				if(wid > maxwid)
+					maxwid = wid;
+				curPos += instrLen;
+				curAdr += instrLen;
+				continue;
 			}
 		}
-	}
-	if(SameText(comment, name))
-		name = "";
-	if(pname != "") {
-		if(comment != "")
-			comment += " ";
-		comment += "^" + pname;
-		if(ptype != "")
-			comment += ":" + ptype;
-	} else if(name != "") {
-		if(comment != "")
-			comment += " ";
-		comment += name;
-		if(type != "")
-			comment += ":" + type;
-	}
 
-	if(comment != "" || namei != "") {
-		line += ";";
-		if(comment != "")
-			line += comment;
-		if(namei != "")
-			line += "{" + namei + "}";
-	}
-	if(line.Length() > MAXLEN)
-		line = line.SubString(1, MAXLEN) + "...";
-	wid = AddAsmLine(curAdr, line, flags);
-	row++;
-	if(wid > maxwid)
-		maxwid = wid;
-	curPos += instrLen;
-	curAdr += instrLen;
-}
+		// Name inside instruction (Fixip, ThreadVar)
+		String namei = "", comment = "", name, pname, type, ptype;
+		if(NameInside) {
+			recN = GetInfoRec(NameInsideAdr);
+			if(recN && recN->HasName()) {
+				namei += recN->GetName();
+				if(recN->type != "")
+					namei += ":" + recN->type;
+			}
+		}
+		// comment
+		recN = GetInfoRec(curAdr);
+		if(recN && recN->picode)
+			comment = MakeComment(recN->picode);
 
-CurProcSize = (curAdr + instrLen) - CurProcAdr;
+		DWORD targetAdr = 0;
+		if(IsValidImageAdr(DisInfo.Immediate)) {
+			if(!IsValidImageAdr(DisInfo.Offset))
+				targetAdr = DisInfo.Immediate;
+		} else if(IsValidImageAdr(DisInfo.Offset))
+			targetAdr = DisInfo.Offset;
 
-if(selectByAdr) {
-	for(int i = 1; i < lbCode->Items->Count; i++) {
-		line = lbCode->Items->Strings[i];
-		sscanf(line.c_str() + 1, "%lX", &Adr);
-		if(Adr >= SelectedIdx) {
-			if(Adr == SelectedIdx) {
-				lbCode->ItemIndex = i;
-				break;
+		if(targetAdr) {
+			name = pname = type = ptype = "";
+			_pos = Adr2Pos(targetAdr);
+			if(_pos >= 0) {
+				recN = GetInfoRec(targetAdr);
+				if(recN) {
+					if(recN->kind == ikResString) {
+						name = recN->GetName() + ":PResStringRec";
+					} else {
+						if(recN->HasName()) {
+							name = recN->GetName();
+							if(recN->type != "")
+								type = recN->type;
+						} else if(IsFlagSet(cfProcStart, _pos))
+							name = GetDefaultProcName(targetAdr);
+					}
+				}
+				// For Delphi2 pointers to VMT are distinct
+				else if(DelphiVersion == 2) {
+					recN = GetInfoRec(targetAdr + cVmtSelfPtr);
+					if(recN && recN->kind == ikVMT && recN->HasName()) {
+						name = recN->GetName();
+					}
+				}
+				Adr = *((DWORD*)(Code + _pos));
+				if(IsValidImageAdr(Adr)) {
+					recN = GetInfoRec(Adr);
+					if(recN) {
+						if(recN->HasName()) {
+							pname = recN->GetName();
+							ptype = recN->type;
+						} else if(IsFlagSet(cfProcStart, _pos))
+							pname = GetDefaultProcName(Adr);
+					}
+				}
 			} else {
-				lbCode->ItemIndex = i - 1;
-				break;
+				_idx = BSSInfos->IndexOf(Val2Str8(targetAdr));
+				if(_idx != -1) {
+					recN = (PInfoRec)BSSInfos->Objects[_idx];
+					name = recN->GetName();
+					type = recN->type;
+				}
 			}
 		}
+		if(SameText(comment, name))
+			name = "";
+		if(pname != "") {
+			if(comment != "")
+				comment += " ";
+			comment += "^" + pname;
+			if(ptype != "")
+				comment += ":" + ptype;
+		} else if(name != "") {
+			if(comment != "")
+				comment += " ";
+			comment += name;
+			if(type != "")
+				comment += ":" + type;
+		}
+
+		if(comment != "" || namei != "") {
+			line += ";";
+			if(comment != "")
+				line += comment;
+			if(namei != "")
+				line += "{" + namei + "}";
+		}
+		if(line.Length() > MAXLEN)
+			line = line.SubString(1, MAXLEN) + "...";
+		wid = AddAsmLine(curAdr, line, flags);
+		row++;
+		if(wid > maxwid)
+			maxwid = wid;
+		curPos += instrLen;
+		curAdr += instrLen;
 	}
-} else
-	lbCode->ItemIndex = SelectedIdx;
 
-if(topIdx != -1)
-	lbCode->TopIndex = topIdx;
-lbCode->ItemHeight = lbCode->Canvas->TextHeight("T");
-lbCode->ScrollWidth = maxwid + 2;
-lbCode->Items->EndUpdate();
+	CurProcSize = (curAdr + instrLen) - CurProcAdr;
 
-ShowCodeXrefs(CurProcAdr, XrefIdx);
-pcWorkArea->ActivePage = tsCodeView;
+	if(selectByAdr) {
+		for(int i = 1; i < lbCode->Items->Count; i++) {
+			line = lbCode->Items->Strings[i];
+			swscanf(line.c_str() + 1, L"%lX", &Adr);
+			if(Adr >= SelectedIdx) {
+				if(Adr == SelectedIdx) {
+					lbCode->ItemIndex = i;
+					break;
+				} else {
+					lbCode->ItemIndex = i - 1;
+					break;
+				}
+			}
+		}
+	} else
+		lbCode->ItemIndex = SelectedIdx;
+
+	if(topIdx != -1)
+		lbCode->TopIndex = topIdx;
+	lbCode->ItemHeight = lbCode->Canvas->TextHeight("T");
+	lbCode->ScrollWidth = maxwid + 2;
+	lbCode->Items->EndUpdate();
+
+	ShowCodeXrefs(CurProcAdr, XrefIdx);
+	pcWorkArea->ActivePage = tsCodeView;
 }
 
 // ---------------------------------------------------------------------------
@@ -6044,7 +6068,7 @@ DWORD __fastcall TFMain_11011981::AnalyzeProcInitial(DWORD fromAdr)
 // ---------------------------------------------------------------------------
 int __fastcall TFMain_11011981::CodeGetTargetAdr(String Line, DWORD* trgAdr)
 {
-	char *s, *p, c;
+	wchar_t *s, *p, c;
 	int n, wid, instrlen;
 	DWORD adr, targetAdr;
 	TPoint cursorPos;
@@ -6055,15 +6079,16 @@ int __fastcall TFMain_11011981::CodeGetTargetAdr(String Line, DWORD* trgAdr)
 	s = Line.c_str() + 1;
 
 	// If db - no address
-	if(strstr(s, " db "))
+	//if(strstr(s, " db "))
+	if(wcsstr(s, L" db "))
 		return 0;
 	// If dd - address
-	p = strstr(s, " dd ");
+	p = wcsstr(s, L" dd ");
 	if(p)
-		sscanf(p + 4, "%lX", &targetAdr);
+		swscanf(p + 4, L"%lX", &targetAdr);
 
 	if(!IsValidImageAdr(targetAdr)) {
-		sscanf(s, "%lX", &adr);
+		swscanf(s, L"%lX", &adr);
 		instrlen = Disasm.Disassemble(Code + Adr2Pos(adr), (__int64)adr, &DisInfo, 0);
 		if(!instrlen)
 			return 0;
@@ -6077,13 +6102,13 @@ int __fastcall TFMain_11011981::CodeGetTargetAdr(String Line, DWORD* trgAdr)
 	if(!IsValidImageAdr(targetAdr)) {
 		GetCursorPos(&cursorPos);
 		cursorPos = lbCode->ScreenToClient(cursorPos);
-		for(n = 0, wid = 0; n < strlen(s); n++) {
+		for(n = 0, wid = 0; n < wcslen(s); n++) {
 			int cwid = canvas->TextWidth(s[n]);
 			if(wid >= cursorPos.x) {
 				while(n >= 0) {
 					c = s[n];
 					if(c == ' ' || c == ',' || c == '[' || c == '+') {
-						sscanf(s + n + 1, "%lX", &targetAdr);
+						swscanf(s + n + 1, L"%lX", &targetAdr);
 						break;
 					}
 					n--;
@@ -6307,7 +6332,7 @@ void __fastcall TFMain_11011981::lbCodeDblClick(TObject* Sender)
 	}
 	// Try picode
 	else {
-		swscanf(text.c_str() + 2, "%lX", &adr);
+		swscanf(text.c_str() + 2, L"%lX", &adr);
 		recN = GetInfoRec(adr);
 		if(recN && recN->picode && IsValidCodeAdr(recN->picode->Ofs.Address)) {
 			pos = Adr2Pos(recN->picode->Ofs.Address);
@@ -6349,7 +6374,7 @@ void __fastcall TFMain_11011981::GoToAddress()
 
 	sAdr = InputDialogExec("Enter Address", "Address:", "");
 	if(sAdr != "") {
-		sscanf(sAdr.c_str(), "%lX", &gotoAdr);
+		swscanf(sAdr.c_str(), L"%lX", &gotoAdr);
 		if(IsValidCodeAdr(gotoAdr)) {
 			pos = Adr2Pos(gotoAdr);
 			// Åñëè èìïîðò - íè÷åãî íå îòîáðàæàåì
@@ -6400,7 +6425,7 @@ void __fastcall TFMain_11011981::miExploreAdrClick(TObject* Sender)
 		text = Val2Str8(viewAdr);
 	sAdr = InputDialogExec("Enter Address", "Address:", text);
 	if(sAdr != "") {
-		sscanf(sAdr.c_str(), "%lX", &viewAdr);
+		swscanf(sAdr.c_str(), L"%lX", &viewAdr);
 		if(IsValidImageAdr(viewAdr)) {
 			int pos = Adr2Pos(viewAdr);
 			if(pos == -2)
@@ -6650,7 +6675,7 @@ void __fastcall TFMain_11011981::ShowClassViewer(DWORD VmtAdr)
 				if(intfsNum) {
 					for(m = 0; m < intfsNum; m++) {
 						String item = tmpList->Strings[m];
-						swscanf(item.c_str(), "%lX", &vAdr);
+						swscanf(item.c_str(), L"%lX", &vAdr);
 						if(IsValidCodeAdr(vAdr)) {
 							int pos = item.Pos(' ');
 							TTreeNode* intfsNode = tvClassesShort->Items->AddChild(node, "<I> " + item.SubString(pos + 1, item.Length()));
@@ -7063,7 +7088,7 @@ void __fastcall TFMain_11011981::miViewProtoClick(TObject* Sender)
 		return;
 
 	item = lbCode->Items->Strings[lbCode->ItemIndex];
-	swscanf(item.c_str() + 1, "%lX", &Adr);
+	swscanf(item.c_str() + 1, L"%lX", &Adr);
 	int instrlen = Disasm.Disassemble(Code + Adr2Pos(Adr), (__int64)Adr, &DisInfo, 0);
 	if(!instrlen)
 		return;
@@ -7191,7 +7216,7 @@ void __fastcall TFMain_11011981::tvClassesDblClick(TObject* Sender)
 		int pos = line.Pos("#");
 		// Given address
 		if(pos && !line.Pos("Sz=")) {
-			sscanf(line.c_str() + pos, "%lX", &adr);
+			swscanf(line.c_str() + pos, L"%lX", &adr);
 			if(IsValidCodeAdr(adr)) {
 				rec.adr = CurProcAdr;
 				rec.itemIdx = lbCode->ItemIndex;
@@ -7336,7 +7361,7 @@ void __fastcall TFMain_11011981::miEditClassClick(TObject* Sender)
 				// Óêàçàí àäðåñ
 				if(pos && node->Text.Pos("Sz=")) {
 					DWORD vmtAdr;
-					swscanf(node->Text.c_str() + pos, "%lX", &vmtAdr);
+					swscanf(node->Text.c_str() + pos, L"%lX", &vmtAdr);
 					if(IsValidImageAdr(vmtAdr)) {
 						FEditFieldsDlg_11011981->VmtAdr = vmtAdr;
 						FEditFieldsDlg_11011981->FieldOffset = FieldOfs;
@@ -8421,7 +8446,7 @@ int __fastcall TFMain_11011981::LoadImage(FILE* f, int version, bool loadExp, bo
 	IMAGE_NT_HEADERS NTHeaders;
 	PIMAGE_SECTION_HEADER SectionHeaders;
 	char segname[9];
-	char msg[1024];
+	wchar_t msg[1024];
 
 	fseek(f, 0L, SEEK_SET);
 	// IDD_ERR_NOT_EXECUTABLE
@@ -8554,14 +8579,14 @@ int __fastcall TFMain_11011981::LoadImage(FILE* f, int version, bool loadExp, bo
 		}
 		// Check evalEP
 		if(evalEP + CodeBase != NTHeaders.OptionalHeader.AddressOfEntryPoint + ImageBase) {
-			sprintf(msg,
-					"Possible invalid EP (NTHeader:%lX, Evaluated:%lX). Input valid EP?",
+			swprintf(msg,
+					L"Possible invalid EP (NTHeader:%lX, Evaluated:%lX). Input valid EP?",
 					NTHeaders.OptionalHeader.AddressOfEntryPoint + ImageBase,
 					evalEP + CodeBase);
 			if(Application->MessageBox(msg, L"Confirmation", MB_YESNO) == IDYES) {
 				sEP = InputDialogExec("New EP", "EP:", Val2Str0(NTHeaders.OptionalHeader.AddressOfEntryPoint + ImageBase));
 				if(sEP != "") {
-					sscanf(sEP.c_str(), "%lX", &EP);
+					swscanf(sEP.c_str(), L"%lX", &EP);
 					if(!IsValidImageAdr(EP)) {
 						delete[] SectionHeaders;
 						delete[] Image;
@@ -8719,7 +8744,7 @@ int __fastcall TFMain_11011981::LoadImage(FILE* f, int version, bool loadExp, bo
 					} else {
 						// by name
 						Hint = *((WORD*)(Image + Adr2Pos(ThunkValue + ImageBase)));
-						NameLength = lstrlen((char*)(Image + Adr2Pos(ThunkValue + 2 + ImageBase)));
+						NameLength = strlen((char*)(Image + Adr2Pos(ThunkValue + 2 + ImageBase)));
 						impFuncName = String((char*)(Image + Adr2Pos(ThunkValue + 2 + ImageBase)), NameLength);
 
 						//if (hLib)
@@ -8842,7 +8867,7 @@ void __fastcall TFMain_11011981::OpenProject(String FileName)
 	IDPFile = FileName;
 
 	Screen->Cursor = crHourGlass;
-	FILE* projectFile = fopen(AnsiString(FileName).c_str(), "rb");
+	FILE* projectFile = _wfopen(FileName.c_str(), L"rb");
 	// Read Delphi version and maximum length of buffer
 	fseek(projectFile, 12, SEEK_SET);
 	fread(&_ver, sizeof(_ver), 1, projectFile);
@@ -8892,7 +8917,7 @@ void __fastcall TFMain_11011981::OpenProject(String FileName)
 	Update();
 
 	char* buf = new BYTE[MaxBufLen];
-	FILE* fIn = fopen(IDPFile.c_str(), "rb");
+	FILE* fIn = _wfopen(IDPFile.c_str(), L"rb");
 	if(fIn) {
 		// TMemoryStream* inStream = new TMemoryStream();
 		// inStream->LoadFromFile(IDPFile);
@@ -9477,7 +9502,7 @@ void __fastcall TFMain_11011981::SaveProject(String FileName)
 	IDPFile = FileName;
 
 	try {
-		outF = fopen(IDPFile.c_str(), "wb+"); // outStream = new TMemoryStream();
+		outF = _wfopen(IDPFile.c_str(), L"wb+"); // outStream = new TMemoryStream();
 		if(outF) {
 			FProgressBar->Show();
 
@@ -9815,7 +9840,7 @@ void __fastcall TFMain_11011981::SaveProject(String FileName)
 			num = 0;
 			if(ClassTreeDone)
 				num = tvClassesFull->Items->Count;
-			if(num && Application->MessageBox("Save full Tree of Classes?", "Warning", MB_YESNO) == IDYES) {
+			if(num && Application->MessageBox(L"Save full Tree of Classes?", L"Warning", MB_YESNO) == IDYES) {
 				FProgressBar->Show();
 				fwrite(&num, sizeof(num), 1, outF); // outStream->Write(&num, sizeof(num));
 				if(num) {
@@ -9936,7 +9961,7 @@ void __fastcall TFMain_11011981::EditFunction(DWORD Adr)
 	BYTE tag, callKind;
 	DWORD adr, rootAdr;
 	int n, m, a, cnt, size, ofs, offset, dotpos;
-	char* p;
+	wchar_t* p;
 	PUnitRec recU;
 	PInfoRec recN, recN1;
 	PXrefRec recX;
@@ -9944,7 +9969,7 @@ void __fastcall TFMain_11011981::EditFunction(DWORD Adr)
 	PMethodRec recM;
 	PARGINFO argInfo;
 	String line, name, typeDef, item, className, procName;
-	char buf[1024];
+	wchar_t buf[1024];
 
 	// if (Adr == EP) return;
 
@@ -9967,22 +9992,24 @@ void __fastcall TFMain_11011981::EditFunction(DWORD Adr)
 				for(n = 0; n < cnt; n++) {
 					line = FEditFunctionDlg_11011981->lbVars->Items->Strings[n];
 					//'-' - deleted line
-					strcpy(buf, line.c_str());
-					p = strtok(buf, " ");
+					//strcpy(buf, line.c_str());
+					wcscpy(buf, line.c_str());
+					//p = strtok(buf, " ");
+					p = wcstok(buf, L" ");
 					// offset
-					sscanf(p, "%lX", &offset);
+					swscanf(p, L"%lX", &offset);
 					// size
-					p = strtok(0, " ");
-					sscanf(p, "%lX", &size);
+					p = wcstok(0, L" ");
+					swscanf(p, L"%lX", &size);
 					// name
-					p = strtok(0, " :");
-					if(stricmp(p, "?"))
+					p = wcstok(0, L" :");
+					if(_wcsicmp(p, L"?"))
 						name = String(p).Trim();
 					else
 						name = "";
 					// type
-					p = strtok(0, " ");
-					if(stricmp(p, "?"))
+					p = wcstok(0, L" ");
+					if(_wcsicmp(p, L"?"))
 						typeDef = String(p).Trim();
 					else
 						typeDef = "";
@@ -10245,7 +10272,7 @@ void __fastcall TFMain_11011981::miIDCGeneratorClick(TObject* Sender)
 		idcTemplate = ChangeFileExt(IDPFile, "");
 	}
 
-	TSaveIDCDialog* SaveIDCDialog = new TSaveIDCDialog(this, "SAVEIDCDLG");
+	TSaveIDCDialog* SaveIDCDialog = new TSaveIDCDialog(this, L"SAVEIDCDLG");
 	SaveIDCDialog->InitialDir = WrkDir;
 	SaveIDCDialog->Filter = "IDC|*.idc";
 	SaveIDCDialog->FileName = idcName;
@@ -10423,7 +10450,7 @@ void __fastcall TFMain_11011981::pmUnitsPopup(TObject* Sender)
 
 	String item = lbUnits->Items->Strings[lbUnits->ItemIndex];
 	DWORD adr;
-	swscanf(item.c_str() + 1, "%lX", &adr);
+	swscanf(item.c_str() + 1, L"%lX", &adr);
 	PUnitRec recU = GetUnit(adr);
 	miRenameUnit->Enabled = (!recU->kb && recU->names->Count <= 1);
 }
@@ -10812,26 +10839,26 @@ void __fastcall TFMain_11011981::OutputLine(FILE* OutF, BYTE flags, DWORD Adr, S
 {
 	// Ouput comments
 	if(flags & 0x10) {
-		char* p = strchr(Content.c_str(), ';');
+		wchar_t* p = wcschr(Content.c_str(), L';');
 		if(p)
-			fprintf(OutF, "C %08lX %s\n", Adr, p + 1);
+			fwprintf(OutF, L"C %08lX %s\n", Adr, p + 1);
 		return;
 	}
 
 	// Jump direction
 	if(flags & 4)
-		fprintf(OutF, "<");
+		fwprintf(OutF, L"<");
 	else if(flags & 8)
-		fprintf(OutF, ">");
+		fwprintf(OutF, L">");
 	else
-		fprintf(OutF, " ");
+		fwprintf(OutF, L" ");
 	/*
    if (flags & 1)
    fprintf(OutF, "%08lX\n", Adr);
    else
    fprintf(OutF, "        ");
    */
-	fprintf(OutF, "%08lX    %s\n", Adr, Content.c_str());
+	fwprintf(OutF, L"%08lX    %s\n", Adr, Content.c_str());
 }
 
 // ---------------------------------------------------------------------------
@@ -11319,7 +11346,7 @@ void __fastcall TFMain_11011981::miAboutClick(TObject* Sender)
 // ---------------------------------------------------------------------------
 void __fastcall TFMain_11011981::miHelpClick(TObject* Sender)
 {
-	ShellExecute(Handle, AnsiString("open").c_str(), AnsiString(Application->HelpFile).c_str(), 0, 0, 1);
+	ShellExecute(Handle, String("open").c_str(), Application->HelpFile.c_str(), 0, 0, 1);
 }
 // ---------------------------------------------------------------------------
 #include "Analyze1.cpp"
@@ -11673,7 +11700,7 @@ int __fastcall GetRecordField(String ARecType, int AOfs, String& name, String& t
 }
 
 // ---------------------------------------------------------------------------
-int __fastcall TFMain_11011981::GetField(String TypeName, int Offset, AnsiString& name, AnsiString& type)
+int __fastcall TFMain_11011981::GetField(String TypeName, int Offset, String& name, String& type)
 {
 	int size, kind, ofs;
 	PFIELDINFO fInfo;
@@ -11981,10 +12008,10 @@ void __fastcall TFMain_11011981::InitAliases(bool find)
 
 	for(int n = 0; n < ResInfo->Aliases->Count; n++) {
 		String item = ResInfo->Aliases->Strings[n];
-		if(item.Pos("=")) {
+		if(item.Pos(L"=")) {
 
-			char* p = AnsiLastChar(item);
-			if(p && *p != '=')
+			wchar_t* p = item.LastChar();
+			if(p && *p != L'=')
 				lbAliases->Items->Add(item);
 		}
 	}
@@ -12066,7 +12093,7 @@ void __fastcall TFMain_11011981::miCopyListClick(TObject* Sender)
 				return;
 		}
 
-		outFile = fopen(AnsiString(SaveDlg->FileName).c_str(), "wt+");
+		outFile = _wfopen(String(SaveDlg->FileName).c_str(), L"wt+");
 		if(!outFile) {
 			ShowMessage("Cannot save units list");
 			return;
@@ -12232,7 +12259,7 @@ void __fastcall TFMain_11011981::FillClassViewerOne(int n, TStringList* tmpList,
 		if(intfsNum) {
 			for(m = 0; m < intfsNum && !*terminated; m++) {
 				nodeText = tmpList->Strings[m];
-				sscanf(nodeText.c_str(), "%lX", &vAdr);
+				swscanf(nodeText.c_str(), L"%lX", &vAdr);
 				if(IsValidCodeAdr(vAdr)) {
 					TTreeNode* intfsNode = AddClassTreeNode(rootNode, "<I> " + nodeText.SubString(nodeText.Pos(' ') + 1, nodeText.Length()));
 					cnt = 0;
@@ -12938,7 +12965,7 @@ void __fastcall TFMain_11011981::pmCodePopup(TObject* Sender)
 		if(lbCode->ItemIndex <= 0)
 			return;
 		DWORD adr;
-		sscanf(lbCode->Items->Strings[lbCode->ItemIndex].c_str() + 2, "%lX", &adr);
+		swscanf(lbCode->Items->Strings[lbCode->ItemIndex].c_str() + 2, L"%lX", &adr);
 		if(adr != CurProcAdr && IsFlagSet(cfLoc, Adr2Pos(adr))) {
 			PInfoRec recN = GetInfoRec(adr);
 			if(recN && recN->xrefs && recN->xrefs->Count > 0) {
@@ -13180,7 +13207,7 @@ void __fastcall TFMain_11011981::miSwitchSkipFlagClick(TObject* Sender)
 	if(lbCode->SelCount > 0) {
 		for(int n = 0; n < lbCode->Count; n++) {
 			if(lbCode->Selected[n]) {
-				sscanf(lbCode->Items->Strings[n].c_str() + 2, "%lX", &_adr);
+				swscanf(lbCode->Items->Strings[n].c_str() + 2, L"%lX", &_adr);
 				Flags[Adr2Pos(_adr)] ^= (cfDSkip | cfSkip);
 			}
 		}
@@ -13197,7 +13224,7 @@ void __fastcall TFMain_11011981::miSwitchFrameFlagClick(TObject* Sender)
 	if(lbCode->SelCount > 0) {
 		for(int n = 0; n < lbCode->Count; n++) {
 			if(lbCode->Selected[n]) {
-				sscanf(lbCode->Items->Strings[n].c_str() + 2, "%lX", &_adr);
+				swscanf(lbCode->Items->Strings[n].c_str() + 2, L"%lX", &_adr);
 				Flags[Adr2Pos(_adr)] ^= cfFrame;
 			}
 		}
@@ -13214,7 +13241,7 @@ void __fastcall TFMain_11011981::cfTry1Click(TObject* Sender)
 	if(lbCode->SelCount > 0) {
 		for(int n = 0; n < lbCode->Count; n++) {
 			if(lbCode->Selected[n]) {
-				sscanf(lbCode->Items->Strings[n].c_str() + 2, "%lX", &_adr);
+				swscanf(lbCode->Items->Strings[n].c_str() + 2, L"%lX", &_adr);
 				Flags[Adr2Pos(_adr)] ^= cfTry;
 			}
 		}
@@ -13339,11 +13366,11 @@ void __fastcall TFMain_11011981::miHiewGeneratorClick(TObject* Sender)
 		return;
 	nametName = SaveDlg->FileName;
 	if(FileExists(nametName)) {
-		if(Application->MessageBox("File already exists. Overwrite?", "Warning", MB_YESNO + MB_ICONWARNING) == IDNO)
+		if(Application->MessageBox(L"File already exists. Overwrite?", L"Warning", MB_YESNO + MB_ICONWARNING) == IDNO)
 			return;
 	}
 	Screen->Cursor = crHourGlass;
-	FILE* fNamet = fopen(nametName.c_str(), "wt+");
+	FILE* fNamet = _wfopen(nametName.c_str(), L"wt+");
 	if(!fNamet) {
 		MessageDlg("Cannot open namet file", mtWarning, TMsgDlgButtons() << mbOK, 0);
 		return;
@@ -13435,13 +13462,13 @@ void __fastcall TFMain_11011981::mCreateCHeaderFileClick(TObject* Sender)
 	delete SaveHDialog;
 
 	if(FileExists(hName)) {
-		if(Application->MessageBox("File already exists. Overwrite?", "Warning", MB_YESNO) == IDNO)
+		if(Application->MessageBox(L"File already exists. Overwrite?", L"Warning", MB_YESNO) == IDNO)
 			return;
 	}
 
 	Screen->Cursor = crHourGlass;
 
-	FILE* hF = fopen(hName.c_str(), "wt+");
+	FILE* hF = _wfopen(hName.c_str(), L"wt+");
 	CreateCppHeaderFile(hF);
 	fclose(hF);
 	Screen->Cursor = crDefault;
@@ -13795,7 +13822,7 @@ void __fastcall TFMain_11011981::CreateCppHeaderFile(FILE* hF)
 					if(RTTIName.Pos(":") > 0)
 						RTTIName = "Array_" + Val2Str8(adr);
 					str = FTypeInfo_11011981->GetCppTypeInfo(adr, &size, 0);
-					fprintf(hF, str.c_str(), RTTIName.c_str());
+					fwprintf(hF, str.c_str(), RTTIName.c_str());
 					break;
 				case ikRecord:
 					// These names already present

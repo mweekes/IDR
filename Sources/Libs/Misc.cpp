@@ -35,6 +35,7 @@ extern int dummy;
 extern String IDRVersion;
 extern String SelectedAsmItem;
 extern char StringBuf[MAXSTRBUFFER];
+//extern wchar_t wStringBuf[MAXSTRBUFFER];
 extern DWORD ImageBase;
 extern DWORD ImageSize;
 extern DWORD TotalSize;
@@ -299,7 +300,7 @@ void __fastcall FillArgInfo(int k, BYTE callkind, PARGINFO argInfo, BYTE** p, in
 }
 
 // ---------------------------------------------------------------------------
-String __fastcall TrimTypeName(const AnsiString& TypeName)
+/*String __fastcall TrimTypeName(const AnsiString& TypeName)
 {
 	if(TypeName.IsEmpty())
 		return TypeName;
@@ -322,9 +323,9 @@ String __fastcall TrimTypeName(const AnsiString& TypeName)
 		}
 		return ExtractProcName(TypeName);
 	}
-}
+}     */
 
-String __fastcall TrimTypeName(const WideString& TypeName)
+String __fastcall TrimTypeName(const String& TypeName)
 {
 	if(TypeName.IsEmpty())
 		return TypeName;
@@ -336,8 +337,8 @@ String __fastcall TrimTypeName(const WideString& TypeName)
 	else if(TypeName[pos + 1] == L'.')
 		return TypeName;
 	else {
-		char c;
-		wchar_t* p = TypeName.c_bstr();
+		TCHAR c;
+		TCHAR* p = TypeName.c_str();
 		// Check special symbols upto '.'
 		while(1) {
 			c = *p++;
@@ -349,6 +350,8 @@ String __fastcall TrimTypeName(const WideString& TypeName)
 		return ExtractProcName(TypeName);
 	}
 }
+
+
 
 // ---------------------------------------------------------------------------
 bool __fastcall IsValidImageAdr(DWORD Adr)
@@ -813,8 +816,8 @@ int __fastcall GetRecordSize(String AName)
 	String _str, _sz;
 
 	// File
-	AnsiString _recFileName = FMain_11011981->WrkDir + "\\types.idr";
-	FILE* _recFile = fopen(_recFileName.c_str(), "rt");
+	String _recFileName = FMain_11011981->WrkDir + L"\\types.idr";
+	FILE* _recFile = _wfopen(_recFileName.c_str(), L"rt");
 	if(_recFile) {
 		while(1) {
 			if(!fgets(StringBuf, 1024, _recFile))
@@ -2395,6 +2398,54 @@ bool __fastcall GetArrayIndexes(AnsiString arrType, int ADim, int* LowIdx, int* 
 	return false;
 }
 
+bool __fastcall GetArrayIndexes(String arrType, int ADim, int* LowIdx, int* HighIdx)
+{
+	wchar_t wStringBuf[MAXSTRBUFFER];
+	wchar_t c, *p, *b;
+	int _dim, _val, _pos;
+	String _item, _item1, _item2;
+
+	*LowIdx = 1;
+	*HighIdx = 1; // by default
+	wcscpy(wStringBuf, arrType.c_str());
+	p = wcschr(wStringBuf, L'[');
+	if(!p)
+		return false;
+	p++;
+	b = p;
+	_dim = 0;
+	while(1) {
+		c = *p;
+		if(c == ',' || c == ']') {
+			_dim++;
+			if(_dim == ADim) {
+				*p = 0;
+				_item = String(b).Trim();
+				_pos = _item.Pos("..");
+				if(!_pos)
+					*LowIdx = 0; // Type
+				else {
+					_item1 = _item.SubString(1, _pos - 1);
+					if(TryStrToInt(_item1, _val))
+						*LowIdx = _val;
+					else
+						*LowIdx = 0; // Type
+					_item2 = _item.SubString(_pos + 2, _item.Length());
+					if(TryStrToInt(_item2, _val))
+						*HighIdx = _val;
+					else
+						*HighIdx = 0; // Type
+				}
+				return true;
+			}
+			if(c == ']')
+				break;
+		}
+		p++;
+	}
+	return false;
+}
+
 // ---------------------------------------------------------------------------
 int __fastcall GetArraySize(AnsiString arrType)
 {
@@ -2446,6 +2497,10 @@ int __fastcall GetArraySize(AnsiString arrType)
 		p++;
 	}
 	return _result;
+}
+int __fastcall GetArraySize(String arrType)
+{
+   return GetArraySize(AnsiString( arrType));
 }
 
 // ---------------------------------------------------------------------------

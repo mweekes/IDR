@@ -30,7 +30,7 @@ __fastcall TFActiveProcesses::TFActiveProcesses(TComponent* Owner)
 	//Load PSAPI
 	if(IsWindows2000OrHigher()) {
 		//Supported starting from Windows XP/Server 2003
-		InstPSAPI = LoadLibrary("PSAPI.DLL");
+		InstPSAPI = LoadLibrary(L"PSAPI.DLL");
 		if(InstPSAPI) {
 			lpEnumProcesses = (TEnumProcesses)GetProcAddress(InstPSAPI, "EnumProcesses");
 			lpEnumProcessModules = (TEnumProcessModules)GetProcAddress(InstPSAPI, "EnumProcessModules");
@@ -38,7 +38,7 @@ __fastcall TFActiveProcesses::TFActiveProcesses(TComponent* Owner)
 			lpGetModuleInformation = (TGetModuleInformation)GetProcAddress(InstPSAPI, "GetModuleInformation");
 		}
 	} else {
-		InstKernel32 = LoadLibrary("kernel32.dll");
+		InstKernel32 = LoadLibrary(L"kernel32.dll");
 		if(InstKernel32) {
 			lpCreateToolhelp32Snapshot = (TCreateToolhelp32Snapshot)GetProcAddress(InstKernel32, "CreateToolhelp32Snapshot");
 			lpProcess32First = (TProcess32First)GetProcAddress(InstKernel32, "Process32First");
